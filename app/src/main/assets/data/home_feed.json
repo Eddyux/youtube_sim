@@ -1,0 +1,250 @@
+{
+  "tabs": [
+    {
+      "key": "all",
+      "label": "All",
+      "items": [
+        {
+          "id": "ad-google-plants",
+          "type": "ad",
+          "title": "成效立竿见影",
+          "creator": "Google Ads",
+          "metadata": "赞助内容",
+          "supportingText": "透过 Google 地图搜寻，寻找室内植栽与景观灵感。",
+          "actionText": "Sign up",
+          "thumbnailLabel": "室内植栽",
+          "accentStart": "#F2F8F0",
+          "accentEnd": "#E8D7FF"
+        },
+        {
+          "id": "promo-openai-course",
+          "type": "promo",
+          "title": "OpenAI",
+          "creator": "初学者教学",
+          "metadata": "1 小時初學者教學",
+          "supportingText": "从零开始认识 ChatGPT、GPT 与 AI 工具工作流。",
+          "thumbnailLabel": "OpenAI 教程",
+          "accentStart": "#0B1026",
+          "accentEnd": "#203A86"
+        },
+        {
+          "id": "video-openai-long",
+          "type": "video",
+          "title": "Learn OpenAI APIs in One Long Session",
+          "creator": "AI Builders",
+          "metadata": "428K views · 2 weeks ago",
+          "actionText": "1:12:34",
+          "thumbnailLabel": "OpenAI",
+          "accentStart": "#101828",
+          "accentEnd": "#334155"
+        },
+        {
+          "id": "video-merry-christmas",
+          "type": "video",
+          "title": "Merry Christmas Mr. Lawrence",
+          "creator": "Ryuichi Sakamoto",
+          "metadata": "5.5M views · 8 years ago",
+          "actionText": "5:14",
+          "thumbnailLabel": "Piano",
+          "accentStart": "#252525",
+          "accentEnd": "#7A7A7A"
+        },
+        {
+          "id": "video-backrooms",
+          "type": "video",
+          "title": "Backrooms | Official Trailer HD",
+          "creator": "A24 Trailers",
+          "metadata": "3.3M views · 1 month ago",
+          "actionText": "2:09",
+          "thumbnailLabel": "Backrooms",
+          "accentStart": "#B8A24A",
+          "accentEnd": "#7A6427"
+        },
+        {
+          "id": "live-spacex-all",
+          "type": "live",
+          "title": "LIVE | SpaceX Falcon 9 Launch Mission",
+          "creator": "APT",
+          "metadata": "178 watching",
+          "badgeText": "LIVE",
+          "thumbnailLabel": "Falcon 9",
+          "accentStart": "#1B2338",
+          "accentEnd": "#394B74"
+        },
+        {
+          "id": "video-car-review",
+          "type": "video",
+          "title": "Driving Aston's Newest Car: Are we Cooked?",
+          "creator": "TopLine Garage",
+          "metadata": "902K views · 6 days ago",
+          "actionText": "12:18",
+          "thumbnailLabel": "Car Review",
+          "accentStart": "#CCB08A",
+          "accentEnd": "#5F3B2A"
+        }
+      ]
+    },
+    {
+      "key": "music",
+      "label": "Music",
+      "items": [
+        {
+          "id": "music-wake-me-up",
+          "type": "video",
+          "title": "Wake Me Up (Official Video)",
+          "creator": "Avicii",
+          "metadata": "2.5B views · 11 years ago",
+          "actionText": "4:33",
+          "thumbnailLabel": "Avicii",
+          "accentStart": "#5A8DEE",
+          "accentEnd": "#1F2B69"
+        },
+        {
+          "id": "music-jay-chou",
+          "type": "video",
+          "title": "那天下雨了",
+          "creator": "周杰伦 Jay Chou",
+          "metadata": "2.2M views · 3 months ago",
+          "actionText": "4:07",
+          "thumbnailLabel": "周杰伦",
+          "accentStart": "#475569",
+          "accentEnd": "#0F172A"
+        },
+        {
+          "id": "music-sunflower",
+          "type": "video",
+          "title": "Sunflower",
+          "creator": "Post Malone, Swae Lee",
+          "metadata": "2.9B views · 5 years ago",
+          "sectionTitle": "New to you",
+          "actionText": "2:41",
+          "thumbnailLabel": "Sunflower",
+          "accentStart": "#FFB648",
+          "accentEnd": "#F97316"
+        },
+        {
+          "id": "music-merry-christmas",
+          "type": "video",
+          "title": "Merry Christmas Mr. Lawrence",
+          "creator": "Ryuichi Sakamoto",
+          "metadata": "5.5M views · 8 years ago",
+          "actionText": "5:14",
+          "thumbnailLabel": "Ryuichi",
+          "accentStart": "#3F3F46",
+          "accentEnd": "#A1A1AA"
+        }
+      ]
+    },
+    {
+      "key": "apple",
+      "label": "Apple",
+      "items": [
+        {
+          "id": "apple-halftime",
+          "type": "video",
+          "title": "Apple Music Super Bowl Halftime Show",
+          "creator": "Kendrick Lamar",
+          "metadata": "172M views · 1 year ago",
+          "actionText": "13:05",
+          "thumbnailLabel": "Halftime",
+          "accentStart": "#7C3AED",
+          "accentEnd": "#111827"
+        },
+        {
+          "id": "apple-mac-vs-pc",
+          "type": "video",
+          "title": "Mac vs PC in 2026: Which One Wins?",
+          "creator": "Byte Review",
+          "metadata": "683K views · 2 weeks ago",
+          "actionText": "10:48",
+          "thumbnailLabel": "Mac vs PC",
+          "accentStart": "#D1D5DB",
+          "accentEnd": "#6B7280"
+        },
+        {
+          "id": "apple-m4-ssd",
+          "type": "video",
+          "title": "M4 Mac mini SSD Upgrade Explained",
+          "creator": "Hardware Stories",
+          "metadata": "211K views · 4 days ago",
+          "actionText": "9:11",
+          "thumbnailLabel": "M4 SSD",
+          "accentStart": "#E5E7EB",
+          "accentEnd": "#94A3B8"
+        },
+        {
+          "id": "apple-macbook-neo",
+          "type": "video",
+          "title": "MacBook Neo Review",
+          "creator": "Creator Desk",
+          "metadata": "97K views · 5 days ago",
+          "actionText": "14:29",
+          "thumbnailLabel": "MacBook Neo",
+          "accentStart": "#BFDBFE",
+          "accentEnd": "#1D4ED8"
+        },
+        {
+          "id": "apple-macbook-experience",
+          "type": "video",
+          "title": "Using MacBook for 30 Days",
+          "creator": "Daily Setup",
+          "metadata": "455K views · 1 month ago",
+          "actionText": "16:02",
+          "thumbnailLabel": "30 Days",
+          "accentStart": "#F3F4F6",
+          "accentEnd": "#9CA3AF"
+        },
+        {
+          "id": "apple-iphone17-battery",
+          "type": "video",
+          "title": "iPhone 17 Battery Test",
+          "creator": "Phone Lab",
+          "metadata": "384K views · 3 days ago",
+          "actionText": "11:36",
+          "thumbnailLabel": "iPhone 17",
+          "accentStart": "#FCA5A5",
+          "accentEnd": "#B91C1C"
+        }
+      ]
+    },
+    {
+      "key": "live",
+      "label": "Live",
+      "items": [
+        {
+          "id": "live-spacex",
+          "type": "live",
+          "title": "SpaceX Falcon 9 Launch Live",
+          "creator": "APT",
+          "metadata": "181 人观看",
+          "badgeText": "LIVE",
+          "thumbnailLabel": "Launch",
+          "accentStart": "#111827",
+          "accentEnd": "#1D4ED8"
+        },
+        {
+          "id": "live-middle-east",
+          "type": "live",
+          "title": "Israel-Iran Breaking Coverage",
+          "creator": "WLA",
+          "metadata": "58 人观看",
+          "badgeText": "LIVE",
+          "thumbnailLabel": "News",
+          "accentStart": "#7F1D1D",
+          "accentEnd": "#1F2937"
+        },
+        {
+          "id": "live-lck",
+          "type": "live",
+          "title": "2026 LCK Spring Split",
+          "creator": "LCK Global",
+          "metadata": "18K 人观看",
+          "badgeText": "LIVE",
+          "thumbnailLabel": "LCK",
+          "accentStart": "#0F766E",
+          "accentEnd": "#164E63"
+        }
+      ]
+    }
+  ]
+}
