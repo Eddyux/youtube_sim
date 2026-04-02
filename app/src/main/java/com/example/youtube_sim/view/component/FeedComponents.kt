@@ -60,14 +60,12 @@ fun HomeScreen(
 
         activeTab?.items?.let { items ->
             items(items, key = FeedItem::id) { item ->
-                FeedItemSection(item = item, onClick = { onFeedItemSelected(item.title) })
+                FeedItemSection(item = item, onClick = { onFeedItemSelected(item.id) })
                 Spacer(modifier = Modifier.height(14.dp))
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(84.dp))
-        }
+        item { Spacer(modifier = Modifier.height(84.dp)) }
     }
 }
 
@@ -89,8 +87,7 @@ private fun FeedItemSection(
         when (item.type) {
             FeedItemType.AD -> AdCard(item = item, onClick = onClick)
             FeedItemType.PROMO -> PromoCard(item = item, onClick = onClick)
-            FeedItemType.VIDEO,
-            FeedItemType.LIVE -> VideoCard(item = item, onClick = onClick)
+            FeedItemType.VIDEO, FeedItemType.LIVE -> VideoCard(item = item, onClick = onClick)
         }
     }
 }
@@ -134,11 +131,7 @@ private fun PromoCard(item: FeedItem, onClick: () -> Unit) {
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(18.dp))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(item.accentStart.toColor(), item.accentEnd.toColor())
-                )
-            )
+            .background(Brush.linearGradient(colors = listOf(item.accentStart.toColor(), item.accentEnd.toColor())))
             .clickable(onClick = onClick)
             .aspectRatio(16f / 9f)
     ) {
@@ -174,17 +167,10 @@ private fun PromoCard(item: FeedItem, onClick: () -> Unit) {
 
 @Composable
 private fun VideoCard(item: FeedItem, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-    ) {
+    Column(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
         ThumbnailBox(item = item)
         Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.Top
-        ) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.Top) {
             Avatar(text = item.creator.take(1))
             Spacer(modifier = Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -212,18 +198,12 @@ private fun ThumbnailBox(
         .fillMaxWidth()
         .padding(horizontal = 16.dp)
         .clip(RoundedCornerShape(18.dp))
-        .background(
-            Brush.linearGradient(
-                colors = listOf(item.accentStart.toColor(), item.accentEnd.toColor())
-            )
-        )
+        .background(Brush.linearGradient(colors = listOf(item.accentStart.toColor(), item.accentEnd.toColor())))
         .aspectRatio(16f / 9f)
 
     Box(modifier = if (onClick == null) baseModifier else baseModifier.clickable(onClick = onClick)) {
         Text(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(horizontal = 18.dp),
+            modifier = Modifier.align(Alignment.CenterStart).padding(horizontal = 18.dp),
             text = item.thumbnailLabel,
             color = Color.White,
             style = MaterialTheme.typography.headlineSmall,
@@ -231,18 +211,14 @@ private fun ThumbnailBox(
         )
         item.badgeText?.let {
             BadgePill(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(12.dp),
+                modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
                 text = it,
                 background = Color(0xFFFF2D2D)
             )
         }
         item.actionText?.let {
             BadgePill(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(12.dp),
                 text = it,
                 background = Color(0xD9000000)
             )
@@ -270,10 +246,7 @@ private fun BadgePill(
 @Composable
 private fun Avatar(text: String) {
     Box(
-        modifier = Modifier
-            .size(34.dp)
-            .clip(CircleShape)
-            .background(Color(0xFFE5E7EB)),
+        modifier = Modifier.size(34.dp).clip(CircleShape).background(Color(0xFFE5E7EB)),
         contentAlignment = Alignment.Center
     ) {
         Text(text = text, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)

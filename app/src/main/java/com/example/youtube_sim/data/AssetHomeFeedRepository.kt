@@ -12,7 +12,7 @@ class AssetHomeFeedRepository(
 ) : HomeFeedRepository {
 
     override fun loadTabs(): List<HomeTabContent> {
-        val raw = context.assets.open("data/home_feed.json").bufferedReader().use { it.readText() }
+        val raw = context.assets.open("data/home_feed.json").bufferedReader(Charsets.UTF_8).use { it.readText() }
         val root = JSONObject(raw)
         val tabs = root.getJSONArray("tabs")
         return tabs.toHomeTabList()

@@ -36,9 +36,7 @@ fun YoutubeTopBar(
     onActionSelected: (String) -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -53,19 +51,12 @@ fun YoutubeTopBar(
                 Text(text = "▶", color = Color.White, style = MaterialTheme.typography.labelLarge)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "YouTube",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = "YouTube", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             actions.forEach { action ->
-                ActionBubble(
-                    emoji = action.emoji,
-                    onClick = { onActionSelected(action.key) }
-                )
+                ActionBubble(emoji = action.emoji, onClick = { onActionSelected(action.key) })
             }
         }
     }

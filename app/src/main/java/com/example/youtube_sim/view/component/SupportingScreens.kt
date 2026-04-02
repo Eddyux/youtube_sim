@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -45,6 +48,7 @@ fun PlaceholderScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.statusBars)
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
@@ -52,7 +56,7 @@ fun PlaceholderScreen(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "🚧", style = MaterialTheme.typography.displayMedium)
+            Text(text = "🧩", style = MaterialTheme.typography.displayMedium)
             Spacer(modifier = Modifier.height(18.dp))
             Text(text = title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
@@ -65,7 +69,7 @@ fun PlaceholderScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
-                    text = "返回",
+                    text = "Back",
                     color = Color.White
                 )
             }
@@ -130,7 +134,7 @@ fun YouScreen(
                         shape = CircleShape,
                         color = Color(0xFFF4F4F5)
                     ) {
-                        Text(modifier = Modifier.padding(10.dp), text = "⚙️")
+                        Text(modifier = Modifier.padding(10.dp), text = "⚙")
                     }
                 }
             }
@@ -153,23 +157,32 @@ fun YouScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            SectionHeader(title = "History", action = "View all")
+            SectionHeader(title = "History", action = "View all", onClick = { onEntrySelected("history") })
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 historyPreviews.forEach { preview ->
-                    PreviewCard(title = preview.title, start = preview.accentStart, end = preview.accentEnd)
+                    PreviewCard(
+                        title = preview.title,
+                        start = preview.accentStart,
+                        end = preview.accentEnd,
+                        onClick = { onEntrySelected("history") }
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            SectionHeader(title = "Playlists", action = "View all")
+            SectionHeader(
+                title = "Playlists",
+                action = "View all",
+                onClick = { onEntrySelected("playlists") }
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 playlistPreviews.forEach { preview ->
-                    PlaylistCard(preview = preview)
+                    PlaylistCard(preview = preview, onClick = { onEntrySelected(preview.key) })
                 }
             }
 
@@ -190,29 +203,40 @@ fun YouScreen(
                     Text(text = entry.label, fontWeight = FontWeight.SemiBold)
                     Text(text = entry.subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
                 }
-                Text(text = "›", color = Color(0xFF6B7280))
+                Text(text = ">", color = Color(0xFF6B7280))
             }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(84.dp))
-        }
+        item { Spacer(modifier = Modifier.height(84.dp)) }
     }
 }
 
 @Composable
-private fun SectionHeader(title: String, action: String) {
+private fun SectionHeader(
+    title: String,
+    action: String,
+    onClick: () -> Unit
+) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFF4F4F5)) {
+        Surface(
+            modifier = Modifier.clickable(onClick = onClick),
+            shape = RoundedCornerShape(16.dp),
+            color = Color(0xFFF4F4F5)
+        ) {
             Text(modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp), text = action)
         }
     }
 }
 
 @Composable
-private fun PreviewCard(title: String, start: String, end: String) {
-    Column(modifier = Modifier.width(146.dp)) {
+private fun PreviewCard(
+    title: String,
+    start: String,
+    end: String,
+    onClick: () -> Unit
+) {
+    Column(modifier = Modifier.width(146.dp).clickable(onClick = onClick)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -226,8 +250,11 @@ private fun PreviewCard(title: String, start: String, end: String) {
 }
 
 @Composable
-private fun PlaylistCard(preview: PlaylistPreview) {
-    Column(modifier = Modifier.width(156.dp)) {
+private fun PlaylistCard(
+    preview: PlaylistPreview,
+    onClick: () -> Unit
+) {
+    Column(modifier = Modifier.width(156.dp).clickable(onClick = onClick)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -2,7 +2,6 @@ package com.example.youtube_sim.view.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.youtube_sim.model.SettingsGroup
 import com.example.youtube_sim.model.SubscriptionGroup
 
 @Composable
@@ -40,14 +38,22 @@ fun SubscriptionsScreen(
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         item {
-            Text(text = "Subscriptions", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Subscriptions",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(6.dp))
             Text(text = "New videos right to you", color = Color(0xFF6B7280))
             Spacer(modifier = Modifier.height(18.dp))
         }
 
         items(groups, key = SubscriptionGroup::title) { group ->
-            Text(text = group.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                text = group.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(10.dp))
             group.channels.forEach { channel ->
                 Row(
@@ -66,13 +72,18 @@ fun SubscriptionsScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = buildString {
-                                append(channel.name)
-                                if (channel.verified) append(" ✓")
+                            text = if (channel.verified) {
+                                "${channel.name} ✓"
+                            } else {
+                                channel.name
                             },
                             fontWeight = FontWeight.SemiBold
                         )
-                        Text(text = "Latest updates", style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
+                        Text(
+                            text = "Latest updates",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF6B7280)
+                        )
                     }
                     Surface(
                         modifier = Modifier.clickable { onChannelSelected(channel.name) },
@@ -93,48 +104,6 @@ fun SubscriptionsScreen(
 
         item {
             Spacer(modifier = Modifier.height(84.dp))
-        }
-    }
-}
-
-@Composable
-fun SettingsScreen(
-    groups: List<SettingsGroup>,
-    onBack: () -> Unit
-) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 18.dp)
-    ) {
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    modifier = Modifier.clickable(onClick = onBack).padding(end = 12.dp),
-                    text = "←",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Text(text = "Settings", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-
-        items(groups, key = SettingsGroup::title) { group ->
-            Text(text = group.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(10.dp))
-            group.items.forEach { item ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = item.emoji)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(text = item.label)
-                }
-            }
-            Spacer(modifier = Modifier.height(18.dp))
         }
     }
 }

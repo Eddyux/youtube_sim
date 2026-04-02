@@ -8,10 +8,10 @@ enum class FeedItemType {
 }
 
 enum class RootTab(val label: String, val emoji: String) {
-    HOME("Home", "🏠"),
-    SHORTS("Shorts", "🎬"),
-    SUBSCRIPTIONS("Subscriptions", "📚"),
-    YOU("You", "🙂")
+    HOME("Home", "⌂"),
+    SHORTS("Shorts", "▶"),
+    SUBSCRIPTIONS("Subscriptions", "▣"),
+    YOU("You", "◉")
 }
 
 data class HomeTabContent(
@@ -71,9 +71,28 @@ data class HistoryPreview(
 )
 
 data class PlaylistPreview(
+    val key: String,
     val title: String,
     val privacy: String,
     val count: String
+)
+
+data class HistoryEntry(
+    val itemId: String,
+    val note: String? = null
+)
+
+data class HistorySection(
+    val title: String,
+    val entries: List<HistoryEntry>
+)
+
+data class PlaylistDetail(
+    val key: String,
+    val title: String,
+    val metadata: String,
+    val description: String,
+    val itemIds: List<String>
 )
 
 data class SettingsGroup(
@@ -84,4 +103,35 @@ data class SettingsGroup(
 data class SettingsItem(
     val label: String,
     val emoji: String
+)
+
+data class GeneralSettingsItem(
+    val key: String,
+    val label: String,
+    val subtitle: String? = null,
+    val hasToggle: Boolean = false
+)
+
+data class NotificationSettingsItem(
+    val key: String,
+    val label: String,
+    val description: String? = null,
+    val hasToggle: Boolean = false
+)
+
+data class PlaySettingsMenuItem(
+    val key: String,
+    val label: String,
+    val emoji: String,
+    val currentValue: String? = null,
+    val hasToggle: Boolean = false
+)
+
+data class VideoComment(
+    val author: String,
+    val handle: String,
+    val text: String,
+    val likes: String,
+    val timeAgo: String,
+    val replyCount: String? = null
 )
