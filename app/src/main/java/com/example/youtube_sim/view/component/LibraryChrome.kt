@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,22 +43,30 @@ fun LibraryTopBar(
     onPlaceholderRequested: (String, String) -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            modifier = Modifier.clickable(onClick = onBack).padding(end = 12.dp),
-            text = "←",
-            style = MaterialTheme.typography.titleLarge
-        )
+        Surface(
+            modifier = Modifier.clickable(onClick = onBack),
+            shape = CircleShape,
+            color = Color(0xFFF4F4F5)
+        ) {
+            Icon(
+                imageVector = BackIcon,
+                contentDescription = "Back",
+                modifier = Modifier.padding(8.dp).size(20.dp),
+                tint = Color.Black
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
         )
-        HeaderPill("📺") { onPlaceholderRequested("Cast", "Cast is reserved as a placeholder entry.") }
+        HeaderPill(CastIcon, "Cast") { onPlaceholderRequested("Cast", "Cast is reserved as a placeholder entry.") }
         Spacer(modifier = Modifier.width(8.dp))
-        HeaderPill("🔍") { onPlaceholderRequested("Search", "Search is reserved as a placeholder entry.") }
+        HeaderPill(SearchIcon, "Search") { onPlaceholderRequested("Search", "Search is reserved as a placeholder entry.") }
         Spacer(modifier = Modifier.width(8.dp))
-        HeaderPill("⋮") { onPlaceholderRequested("More", "More is reserved as a placeholder entry.") }
+        HeaderPill(MoreIcon, "More") { onPlaceholderRequested("More", "More is reserved as a placeholder entry.") }
     }
 }
 
@@ -78,12 +89,21 @@ fun FilterChips(labels: List<String>) {
 }
 
 @Composable
-private fun HeaderPill(label: String, onClick: () -> Unit) {
+private fun HeaderPill(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
     Surface(
         modifier = Modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
+        shape = CircleShape,
         color = Color(0xFFF4F4F5)
     ) {
-        Text(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp), text = label)
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.padding(8.dp).size(18.dp),
+            tint = Color(0xFF111827)
+        )
     }
 }

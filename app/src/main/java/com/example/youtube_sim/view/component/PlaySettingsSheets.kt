@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -39,7 +42,9 @@ fun PlaySettingsSheet(
         contentAlignment = Alignment.BottomCenter
     ) {
         Surface(
-            modifier = Modifier.fillMaxWidth().clickable(enabled = false, onClick = {}),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = false, onClick = {}),
             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
             color = Color(0xFF212121)
         ) {
@@ -54,7 +59,12 @@ fun PlaySettingsSheet(
                             .padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = item.emoji, color = Color.White)
+                        Icon(
+                            imageVector = playSettingIcon(item.key),
+                            contentDescription = item.label,
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = item.label,
@@ -64,6 +74,8 @@ fun PlaySettingsSheet(
                         )
                         item.currentValue?.let {
                             Text(text = it, color = Color(0xFF9CA3AF), style = MaterialTheme.typography.bodyMedium)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(imageVector = ChevronRightIcon, contentDescription = null, tint = Color(0xFF9CA3AF), modifier = Modifier.size(18.dp))
                         }
                     }
                 }
@@ -87,21 +99,32 @@ fun PlaySettingsMoreSheet(
         contentAlignment = Alignment.BottomCenter
     ) {
         Surface(
-            modifier = Modifier.fillMaxWidth().clickable(enabled = false, onClick = {}),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = false, onClick = {}),
             shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
             color = Color(0xFF212121)
         ) {
             Column(modifier = Modifier.padding(vertical = 16.dp)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.clickable(onClick = onDismiss).padding(end = 12.dp),
-                        text = "←",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Surface(
+                        modifier = Modifier.clickable(onClick = onDismiss),
+                        shape = CircleShape,
+                        color = Color(0xFF2B2B2B)
+                    ) {
+                        Icon(
+                            imageVector = BackIcon,
+                            contentDescription = "Back",
+                            tint = Color.White,
+                            modifier = Modifier.padding(8.dp).size(20.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = "More",
                         color = Color.White,
@@ -112,10 +135,17 @@ fun PlaySettingsMoreSheet(
                 Spacer(modifier = Modifier.height(8.dp))
                 items.forEach { item ->
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = item.emoji, color = Color.White)
+                        Icon(
+                            imageVector = playSettingIcon(item.key),
+                            contentDescription = item.label,
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = item.label,
@@ -135,6 +165,8 @@ fun PlaySettingsMoreSheet(
                         }
                         item.currentValue?.let {
                             Text(text = it, color = Color(0xFF9CA3AF), style = MaterialTheme.typography.bodyMedium)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(imageVector = ChevronRightIcon, contentDescription = null, tint = Color(0xFF9CA3AF), modifier = Modifier.size(18.dp))
                         }
                     }
                 }

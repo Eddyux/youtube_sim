@@ -1,54 +1,52 @@
 # youtube_sim
 
-一个基于 Jetpack Compose 的本地静态 YouTube 模拟项目，当前按 `需求.md` 和 `UIReference/` 截图完成了首页、订阅页、个人页、设置页（含 General、Notifications 子页面）以及视频播放页的静态实现。
+A local-asset YouTube-style Android app built with Jetpack Compose. The UI follows the screenshots in `UIReference/` and the screen descriptions in `需求.md`.
 
-## 已实现
+## What is in the app
 
-- `Home` 首页，含 `All / Music / Apple / Live` 四个内容流
-- 顶部 YouTube 风格品牌栏与分类标签
-- `Subscriptions` 分类订阅列表页
-- `You` 页，含 `History / Playlists / Settings / Your videos` 结构
-- `Settings` 设置页，各设置项可点击
-  - `General` 通用设置页（含 Appearance、Rotate Shorts、Playback in feeds、Voice search language、Location、Restricted Mode、Enable stats for nerds、Earn badges 等设置项与开关）
-  - `Notifications` 通知设置页（含 Scheduled digest、Subscriptions、Channel settings、Recommended videos、Product updates、Watch on TV 等通知开关）
-- `Video Play` 视频播放页
-  - 视频播放区域（渐变占位 + 播放按钮 + 进度条 + 时长标签）
-  - 视频信息（标题、播放量、频道信息、Subscribe 按钮）
-  - 操作按钮行（点赞、踩、分享、保存）
-  - 评论区预览
-  - 相关视频推荐列表
-  - 播放设置底部弹窗（Quality、Playback speed、Captions、Lock screen、More）
-  - 更多设置底部弹窗（Loop video、Ambient mode、Stable volume、Sleep timer、Watch in VR、Help & feedback）
-- `Shorts` 仍为占位页
-- 未实现点击项统一跳转到"开发中"占位页
-- 使用 `app/src/main/assets/data/home_feed.json` 作为静态内容源
-- 基于 Presenter 驱动的简单 MVP 分层
+- `Home` keeps the main chip flow with `All`, `Podcasts`, `Music`, `Apple`, and `Live`.
+- `Subscriptions` stays available as its own bottom-tab screen.
+- `You` now keeps the requirement-based layout: account header, history covers, playlist covers, `Your videos`, `Movies`, and a Premium promo card.
+- `Settings` stays reachable, with `General` and `Notifications` subpages preserved.
+- `Video Play` keeps the player, visible seek bar, comments entry, related videos, and playback settings sheets.
+- `Shorts` uses a vertical one-video-at-a-time feed backed by local asset videos.
 
-## 目录结构
+## Local video support
 
-- `app/src/main/java/com/example/youtube_sim/model` — 数据模型
-- `app/src/main/java/com/example/youtube_sim/data` — 数据源
-- `app/src/main/java/com/example/youtube_sim/presenter` — Presenter 层（含合约、Presenter、静态数据）
-- `app/src/main/java/com/example/youtube_sim/view` — 视图层
-  - `view/YoutubeApp.kt` — 根路由
-  - `view/component/AppChrome.kt` — 顶栏、底栏、ChipRow
-  - `view/component/FeedComponents.kt` — 首页 Feed 卡片
-  - `view/component/CollectionScreens.kt` — 订阅页、设置页
-  - `view/component/SupportingScreens.kt` — 占位页、You 页
-  - `view/component/SettingsSubScreens.kt` — General、Notifications 设置子页
-  - `view/component/VideoPlayScreen.kt` — 视频播放页
-  - `view/component/PlaySettingsSheets.kt` — 播放设置底部弹窗
-- `app/src/main/assets/data` — 静态 JSON 数据
+- Local videos are loaded from `app/src/main/assets/data/vedio/`.
+- Feed entries in `app/src/main/assets/data/home_feed.json` point to those asset files.
+- Playback uses Media3 ExoPlayer through `app/src/main/java/com/example/youtube_sim/view/component/AssetVideoViews.kt`.
+- Video cards, history cards, playlist cards, and related items render thumbnails from local video frames when possible.
 
-## 构建
+## Main files
+
+- `app/src/main/java/com/example/youtube_sim/model` - UI models
+- `app/src/main/java/com/example/youtube_sim/data` - asset-backed repository
+- `app/src/main/java/com/example/youtube_sim/presenter` - presenter state and screen data
+- `app/src/main/java/com/example/youtube_sim/view/YoutubeApp.kt` - root app routing
+- `app/src/main/java/com/example/youtube_sim/view/component/AppChrome.kt` - shared top and bottom chrome
+- `app/src/main/java/com/example/youtube_sim/view/component/FeedComponents.kt` - home feed UI
+- `app/src/main/java/com/example/youtube_sim/view/component/CollectionScreens.kt` - subscriptions UI
+- `app/src/main/java/com/example/youtube_sim/view/component/SupportingScreens.kt` - You screen and placeholder UI
+- `app/src/main/java/com/example/youtube_sim/view/component/LibraryScreens.kt` - history and playlist screens
+- `app/src/main/java/com/example/youtube_sim/view/component/SettingsScreen.kt` - settings list
+- `app/src/main/java/com/example/youtube_sim/view/component/SettingsSubScreens.kt` - general and notifications screens
+- `app/src/main/java/com/example/youtube_sim/view/component/VideoPlayScreen.kt` - watch screen overlays
+- `app/src/main/java/com/example/youtube_sim/view/component/PlaySettingsSheets.kt` - playback settings sheets
+- `app/src/main/java/com/example/youtube_sim/view/component/CommentsSheet.kt` - comments bottom sheet
+- `app/src/main/java/com/example/youtube_sim/view/component/ShortsScreen.kt` - shorts pager UI
+
+## Build
 
 ```powershell
 .\gradlew.bat assembleDebug
 ```
 
-## 当前说明
+## Latest update
 
-- 视频封面目前使用渐变占位图，不依赖外部图片资源
-- `Podcasts`、顶部操作区、`History / Playlists / Your videos` 详情页仍为占位入口
-- 如果设备里还保留旧的 `com.example.test05`，它会和当前 `com.example.youtube_sim` 并存，需要手动卸载旧包避免混淆
-- 后续如果你补充更多截图或页面要求，可以继续按现有分层扩展
+- Restored the `Live` home tab and kept it visible in the home chip row.
+- Brought the `You` page back in line with the requirement and reference image without removing the rest of the app navigation.
+- Added the missing `Your videos`, `Movies`, playlist `+` action, and Premium promo block to the `You` page.
+- Preserved and refreshed `Settings`, `General`, `Notifications`, playback settings, and comments instead of trimming them away.
+- Expanded the notifications settings list so it better matches the reference screen.
+- Replaced garbled button and icon labels with readable text across the restored screens.

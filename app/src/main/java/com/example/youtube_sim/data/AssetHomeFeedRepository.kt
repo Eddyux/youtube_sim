@@ -47,6 +47,7 @@ class AssetHomeFeedRepository(
             badgeText = optString("badgeText").ifBlank { null },
             sectionTitle = optString("sectionTitle").ifBlank { null },
             thumbnailLabel = getString("thumbnailLabel"),
+            assetPath = optString("assetPath").ifBlank { null },
             accentStart = getString("accentStart"),
             accentEnd = getString("accentEnd")
         )

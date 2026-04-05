@@ -47,7 +47,10 @@ class YoutubePresenter(
 
     override fun onHeaderActionSelected(key: String) {
         val action = headerActions.firstOrNull { it.key == key } ?: return
-        showPlaceholder(action.label, "${action.label} is kept as an entry point for later work.")
+        when (key) {
+            "notifications" -> uiState = uiState.copy(overlay = OverlayState.Notifications)
+            else -> showPlaceholder(action.label, "${action.label} is kept as an entry point for later work.")
+        }
     }
 
     override fun onFeedItemSelected(itemId: String) {

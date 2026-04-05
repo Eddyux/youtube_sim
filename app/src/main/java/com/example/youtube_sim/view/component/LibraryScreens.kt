@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -108,7 +110,9 @@ fun PlaylistScreen(
                 Spacer(modifier = Modifier.height(18.dp))
                 Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = Color.Black) {
                     Text(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
                         text = "Play all",
                         color = Color.White,
                         style = MaterialTheme.typography.labelLarge,
@@ -139,21 +143,40 @@ private fun PlaylistHeader(
         firstItem?.accentEnd?.toScreenColor() ?: Color(0xFF52525B)
     )
     Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(18.dp))
-                .background(Brush.linearGradient(colors))
-                .aspectRatio(1.25f),
-            contentAlignment = Alignment.BottomStart
-        ) {
-            Text(
-                modifier = Modifier.padding(18.dp),
-                text = playlist.title,
-                color = Color.White,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
+        if (firstItem != null) {
+            AssetThumbnail(
+                item = firstItem,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.25f)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(18.dp),
+                    text = playlist.title,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(Brush.linearGradient(colors))
+                    .aspectRatio(1.25f),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                Text(
+                    modifier = Modifier.padding(18.dp),
+                    text = playlist.title,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
         Spacer(modifier = Modifier.height(14.dp))
         Text(text = playlist.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
@@ -170,17 +193,18 @@ private fun LibraryVideoRow(
     note: String? = null,
     onClick: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick), verticalAlignment = Alignment.Top) {
-        Box(
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.Top
+    ) {
+        AssetThumbnail(
+            item = item,
             modifier = Modifier
                 .width(156.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Brush.linearGradient(listOf(item.accentStart.toScreenColor(), item.accentEnd.toScreenColor())))
-                .aspectRatio(16f / 9f),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = item.thumbnailLabel, color = Color.White, fontWeight = FontWeight.Bold)
-        }
+                .aspectRatio(16f / 9f)
+        )
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -197,7 +221,7 @@ private fun LibraryVideoRow(
                 Text(text = it, style = MaterialTheme.typography.bodySmall, color = Color(0xFF9CA3AF))
             }
         }
-        Text(text = "⋮", color = Color(0xFF737373))
+        Icon(imageVector = MoreIcon, contentDescription = "More", tint = Color(0xFF737373), modifier = Modifier.size(18.dp))
     }
 }
 

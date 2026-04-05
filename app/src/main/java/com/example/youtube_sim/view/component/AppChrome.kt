@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,7 +37,9 @@ fun YoutubeTopBar(
     onActionSelected: (String) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -45,10 +48,15 @@ fun YoutubeTopBar(
                 modifier = Modifier
                     .clip(RoundedCornerShape(9.dp))
                     .background(Color(0xFFFF1F1F))
-                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                    .padding(horizontal = 7.dp, vertical = 5.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "▶", color = Color.White, style = MaterialTheme.typography.labelLarge)
+                Icon(
+                    imageVector = PlayLogoIcon,
+                    contentDescription = "YouTube",
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "YouTube", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
@@ -56,7 +64,7 @@ fun YoutubeTopBar(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             actions.forEach { action ->
-                ActionBubble(emoji = action.emoji, onClick = { onActionSelected(action.key) })
+                ActionBubble(action = action, onClick = { onActionSelected(action.key) })
             }
         }
     }
@@ -115,7 +123,12 @@ fun BottomBar(
                     .padding(horizontal = 14.dp, vertical = 6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = tab.emoji)
+                Icon(
+                    imageVector = bottomTabIcon(tab),
+                    contentDescription = tab.label,
+                    tint = if (selected) Color.Black else Color(0xFF737373),
+                    modifier = Modifier.size(22.dp)
+                )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = tab.label,
@@ -130,7 +143,7 @@ fun BottomBar(
 
 @Composable
 private fun ActionBubble(
-    emoji: String,
+    action: HeaderAction,
     onClick: () -> Unit
 ) {
     Box(
@@ -141,6 +154,11 @@ private fun ActionBubble(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = emoji)
+        Icon(
+            imageVector = headerActionIcon(action.key),
+            contentDescription = action.label,
+            tint = Color(0xFF111827),
+            modifier = Modifier.size(20.dp)
+        )
     }
 }

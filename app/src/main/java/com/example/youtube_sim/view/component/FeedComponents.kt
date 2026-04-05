@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -184,7 +185,7 @@ private fun VideoCard(item: FeedItem, onClick: () -> Unit) {
                 Text(text = item.creator, style = MaterialTheme.typography.bodySmall, color = Color(0xFF737373))
                 Text(text = item.metadata, style = MaterialTheme.typography.bodySmall, color = Color(0xFF737373))
             }
-            Text(text = "⋮", color = Color(0xFF737373))
+            Icon(imageVector = MoreIcon, contentDescription = "More", tint = Color(0xFF737373), modifier = Modifier.size(18.dp))
         }
     }
 }
@@ -197,28 +198,23 @@ private fun ThumbnailBox(
     val baseModifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp)
-        .clip(RoundedCornerShape(18.dp))
-        .background(Brush.linearGradient(colors = listOf(item.accentStart.toColor(), item.accentEnd.toColor())))
         .aspectRatio(16f / 9f)
 
-    Box(modifier = if (onClick == null) baseModifier else baseModifier.clickable(onClick = onClick)) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterStart).padding(horizontal = 18.dp),
-            text = item.thumbnailLabel,
-            color = Color.White,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
-        )
+    AssetThumbnail(modifier = if (onClick == null) baseModifier else baseModifier.clickable(onClick = onClick), item = item) {
         item.badgeText?.let {
             BadgePill(
-                modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(12.dp),
                 text = it,
                 background = Color(0xFFFF2D2D)
             )
         }
         item.actionText?.let {
             BadgePill(
-                modifier = Modifier.align(Alignment.BottomEnd).padding(12.dp),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp),
                 text = it,
                 background = Color(0xD9000000)
             )
@@ -246,7 +242,10 @@ private fun BadgePill(
 @Composable
 private fun Avatar(text: String) {
     Box(
-        modifier = Modifier.size(34.dp).clip(CircleShape).background(Color(0xFFE5E7EB)),
+        modifier = Modifier
+            .size(34.dp)
+            .clip(CircleShape)
+            .background(Color(0xFFE5E7EB)),
         contentAlignment = Alignment.Center
     ) {
         Text(text = text, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)

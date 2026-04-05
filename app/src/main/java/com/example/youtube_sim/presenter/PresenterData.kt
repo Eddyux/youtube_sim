@@ -26,16 +26,17 @@ internal val homeChips = listOf(
 )
 
 internal val headerActions = listOf(
-    HeaderAction(key = "cast", emoji = "📺", label = "Cast"),
-    HeaderAction(key = "notifications", emoji = "🔔", label = "Notifications"),
-    HeaderAction(key = "search", emoji = "🔍", label = "Search")
+    HeaderAction(key = "cast", emoji = "Cast", label = "Cast"),
+    HeaderAction(key = "notifications", emoji = "Bell", label = "Notifications"),
+    HeaderAction(key = "search", emoji = "Find", label = "Search")
 )
 
 internal val youEntries = listOf(
-    YouMenuEntry(key = "history", label = "History", subtitle = "Recent watched videos", emoji = "🕘"),
-    YouMenuEntry(key = "playlists", label = "Playlists", subtitle = "Saved collections and queues", emoji = "🎞"),
-    YouMenuEntry(key = "settings", label = "Settings", subtitle = "Account and app preferences", emoji = "⚙"),
-    YouMenuEntry(key = "your-videos", label = "Your videos", subtitle = "Creator tools entry", emoji = "🎬")
+    YouMenuEntry(key = "history", label = "History", subtitle = "Recent watched videos", emoji = "His"),
+    YouMenuEntry(key = "playlists", label = "Playlists", subtitle = "Saved collections and queues", emoji = "List"),
+    YouMenuEntry(key = "settings", label = "Settings", subtitle = "Account and app preferences", emoji = "Set"),
+    YouMenuEntry(key = "your-videos", label = "Your videos", subtitle = "Creator tools entry", emoji = "Vid"),
+    YouMenuEntry(key = "movies", label = "Movies", subtitle = "Purchases and rentals", emoji = "Mov")
 )
 
 internal val subscriptionGroups = listOf(
@@ -74,62 +75,62 @@ internal val subscriptionGroups = listOf(
 )
 
 internal val historyPreviews = listOf(
-    HistoryPreview("Space launches this week", "#0F172A", "#2563EB"),
-    HistoryPreview("Studio music sessions", "#312E81", "#9333EA"),
-    HistoryPreview("Apple hardware round-up", "#374151", "#9CA3AF")
+    HistoryPreview("DIY PC builds", "#0F172A", "#2563EB"),
+    HistoryPreview("Jay Chou replay", "#312E81", "#9333EA"),
+    HistoryPreview("Apple quick clips", "#374151", "#9CA3AF")
 )
 
 internal val historySections = listOf(
     HistorySection(
         title = "Today",
         entries = listOf(
-            HistoryEntry("video-backrooms"),
-            HistoryEntry("apple-m4-ssd"),
-            HistoryEntry("video-car-review", note = "Removed from watch history")
+            HistoryEntry("shorts-unboxing-mac-desktop"),
+            HistoryEntry("apple-macbook-neo"),
+            HistoryEntry("all-screenshot-to-code", note = "Removed from watch history")
         )
     ),
     HistorySection(
         title = "Yesterday",
         entries = listOf(
-            HistoryEntry("apple-halftime"),
-            HistoryEntry("music-sunflower")
+            HistoryEntry("music-jay-chou-i-do"),
+            HistoryEntry("apple-airpods-pro-3")
         )
     ),
     HistorySection(
         title = "Wednesday",
         entries = listOf(
-            HistoryEntry("apple-mac-vs-pc"),
-            HistoryEntry("apple-iphone17-battery")
+            HistoryEntry("shorts-overkill-mini-pc"),
+            HistoryEntry("all-mini-lunchbox-pc")
         )
     ),
     HistorySection(
         title = "Oct 7, 2024",
         entries = listOf(
-            HistoryEntry("music-wake-me-up"),
-            HistoryEntry("video-merry-christmas")
+            HistoryEntry("music-blue-porcelain"),
+            HistoryEntry("music-jay-chou-nocturne")
         )
     )
 )
 
 internal val playlistPreviews = listOf(
-    PlaylistPreview(key = "watch_later", title = "Watch later", privacy = "Private", count = "2"),
-    PlaylistPreview(key = "liked_videos", title = "Liked videos", privacy = "Private", count = "2")
+    PlaylistPreview(key = "watch_later", title = "Watch later", privacy = "Private", count = "3"),
+    PlaylistPreview(key = "liked_videos", title = "Liked videos", privacy = "Private", count = "3")
 )
 
 internal val playlistDetails = listOf(
     PlaylistDetail(
         key = "watch_later",
         title = "Watch later",
-        metadata = "Playlist · Private · 2 videos · No views",
-        description = "Short queue for videos you plan to revisit later.",
-        itemIds = listOf("apple-macbook-experience", "video-car-review")
+        metadata = "Playlist - Private - 3 videos - No views",
+        description = "Saved videos you want to revisit from the new asset library.",
+        itemIds = listOf("all-build-itx-too-late", "apple-esim-travel", "all-screenshot-to-code")
     ),
     PlaylistDetail(
         key = "liked_videos",
         title = "Liked videos",
-        metadata = "Playlist · Private · 2 videos · No views",
+        metadata = "Playlist - Private - 3 videos - No views",
         description = "Videos you have already marked with a like.",
-        itemIds = listOf("video-merry-christmas", "video-backrooms")
+        itemIds = listOf("music-taylor-ophelia", "shorts-unboxing-mac-desktop", "music-jay-chou-i-do")
     )
 )
 
@@ -137,39 +138,39 @@ internal val settingsGroups = listOf(
     SettingsGroup(
         title = "Account",
         items = listOf(
-            SettingsItem("General", "⚙"),
-            SettingsItem("Switch or manage account", "👤"),
-            SettingsItem("Family Center", "👨‍👩‍👧"),
-            SettingsItem("Languages", "🌐"),
-            SettingsItem("Time management", "⏱"),
-            SettingsItem("Notifications", "🔔"),
-            SettingsItem("Purchases and memberships", "💳"),
-            SettingsItem("Billing & payments", "💰"),
-            SettingsItem("Manage all history", "🕘"),
-            SettingsItem("Your data in YouTube", "🧾"),
-            SettingsItem("Privacy", "🔒"),
-            SettingsItem("Connected apps", "🔌"),
-            SettingsItem("Try experimental new features", "🧪")
+            SettingsItem("General", "Gen"),
+            SettingsItem("Switch or manage account", "Acct"),
+            SettingsItem("Family Center", "Fam"),
+            SettingsItem("Languages", "Lang"),
+            SettingsItem("Time management", "Time"),
+            SettingsItem("Notifications", "Bell"),
+            SettingsItem("Purchases and memberships", "Shop"),
+            SettingsItem("Billing & payments", "Pay"),
+            SettingsItem("Manage all history", "Hist"),
+            SettingsItem("Your data in YouTube", "Data"),
+            SettingsItem("Privacy", "Lock"),
+            SettingsItem("Connected apps", "Apps"),
+            SettingsItem("Try experimental new features", "Lab")
         )
     ),
     SettingsGroup(
         title = "Video and audio preferences",
         items = listOf(
-            SettingsItem("Quality", "▶"),
-            SettingsItem("Playback", "⏯"),
-            SettingsItem("Captions", "💬"),
-            SettingsItem("Data saving", "📶"),
-            SettingsItem("Accessibility", "♿"),
-            SettingsItem("Watch on TV", "📺")
+            SettingsItem("Quality", "HD"),
+            SettingsItem("Playback", "Play"),
+            SettingsItem("Captions", "CC"),
+            SettingsItem("Data saving", "Data"),
+            SettingsItem("Accessibility", "A11y"),
+            SettingsItem("Watch on TV", "TV")
         )
     ),
     SettingsGroup(
         title = "Help and policy",
         items = listOf(
-            SettingsItem("Help", "❓"),
-            SettingsItem("YouTube Terms of Service", "📄"),
-            SettingsItem("Send feedback", "📝"),
-            SettingsItem("About", "ℹ")
+            SettingsItem("Help", "Help"),
+            SettingsItem("YouTube Terms of Service", "Terms"),
+            SettingsItem("Send feedback", "Send"),
+            SettingsItem("About", "Info")
         )
     )
 )
@@ -220,15 +221,63 @@ internal val notificationSettings = listOf(
         hasToggle = true
     ),
     NotificationSettingsItem(
+        "recommended_create",
+        "Recommended ways to create",
+        description = "Notify me about recommended trends and ways to create",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "activity_channel",
+        "Activity on my channel",
+        description = "Notify me about comment and other activity on my channel or videos",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "activity_comments",
+        "Activity on my comments",
+        description = "Notify me about replies, likes, and other activity on my comments",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "mentions",
+        "Mentions",
+        description = "Notify me when others mention my channel",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "reused_content",
+        "Others reusing my content",
+        description = "Notify me when others share, remix, or respond to my content on their channels",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
         "product_updates",
         "Product updates",
         description = "Updates about YouTube features and tips",
         hasToggle = true
     ),
     NotificationSettingsItem(
+        "promotional_content",
+        "Promotional content and offers",
+        description = "Notify me of promotional content and offers, like member-only perks",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
         "watch_on_tv",
         "Watch on TV",
         description = "Notify me about activity on connected TVs",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "disable_sounds",
+        "Disable sounds & vibrations",
+        description = "Silence notifications during the hours you specify",
+        hasToggle = true
+    ),
+    NotificationSettingsItem(
+        "new_badges",
+        "New badges",
+        description = "Notify me when I receive a new badge",
         hasToggle = true
     )
 )
@@ -241,28 +290,36 @@ internal val defaultToggles = mapOf(
     "scheduled_digest" to false,
     "subscriptions" to true,
     "recommended_videos" to true,
+    "recommended_create" to true,
+    "activity_channel" to true,
+    "activity_comments" to true,
+    "mentions" to true,
+    "reused_content" to true,
     "product_updates" to true,
+    "promotional_content" to true,
     "watch_on_tv" to true,
+    "disable_sounds" to false,
+    "new_badges" to true,
     "loop_video" to false,
     "ambient_mode" to true,
     "stable_volume" to false
 )
 
 internal val playSettingsItems = listOf(
-    PlaySettingsMenuItem("quality", "Quality", "⚙", currentValue = "Auto (720p)"),
-    PlaySettingsMenuItem("playback_speed", "Playback speed", "⏱", currentValue = "1x"),
-    PlaySettingsMenuItem("captions", "Captions", "💬", currentValue = "Chinese"),
-    PlaySettingsMenuItem("lock_screen", "Lock screen", "🔒"),
-    PlaySettingsMenuItem("more", "More", "⋯")
+    PlaySettingsMenuItem("quality", "Quality", "HD", currentValue = "Auto (720p)"),
+    PlaySettingsMenuItem("playback_speed", "Playback speed", "1x", currentValue = "1x"),
+    PlaySettingsMenuItem("captions", "Captions", "CC", currentValue = "Chinese"),
+    PlaySettingsMenuItem("lock_screen", "Lock screen", "Lock"),
+    PlaySettingsMenuItem("more", "More", "More")
 )
 
 internal val playSettingsMoreItems = listOf(
-    PlaySettingsMenuItem("loop_video", "Loop video", "🔁", hasToggle = true),
-    PlaySettingsMenuItem("ambient_mode", "Ambient mode", "✨", hasToggle = true),
-    PlaySettingsMenuItem("stable_volume", "Stable volume", "🔊", hasToggle = true),
-    PlaySettingsMenuItem("sleep_timer", "Sleep timer", "⏰", currentValue = "Off"),
-    PlaySettingsMenuItem("watch_in_vr", "Watch in VR", "🥽"),
-    PlaySettingsMenuItem("help_feedback", "Help & feedback", "❓")
+    PlaySettingsMenuItem("loop_video", "Loop video", "Loop", hasToggle = true),
+    PlaySettingsMenuItem("ambient_mode", "Ambient mode", "Glow", hasToggle = true),
+    PlaySettingsMenuItem("stable_volume", "Stable volume", "Vol", hasToggle = true),
+    PlaySettingsMenuItem("sleep_timer", "Sleep timer", "Sleep", currentValue = "Off"),
+    PlaySettingsMenuItem("watch_in_vr", "Watch in VR", "VR"),
+    PlaySettingsMenuItem("help_feedback", "Help & feedback", "Help")
 )
 
 internal val comments = listOf(

@@ -1,6 +1,5 @@
 package com.example.youtube_sim.view.component
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,8 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -73,35 +72,44 @@ private fun VideoPlayerArea(
             .windowInsetsPadding(WindowInsets.statusBars)
             .background(Color.Black)
     ) {
-        Box(
+        AssetVideoPlayer(
+            item = item,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .background(Brush.linearGradient(listOf(item.accentStart.toPlayColor(), item.accentEnd.toPlayColor()))),
-            contentAlignment = Alignment.Center
+                .aspectRatio(16f / 9f),
+            showControls = true,
+            keepControlsVisible = true
         ) {
-            Text(
-                text = item.thumbnailLabel,
-                color = Color.White,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Surface(modifier = Modifier.size(56.dp), shape = CircleShape, color = Color(0x99000000)) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "▶", color = Color.White, style = MaterialTheme.typography.headlineSmall)
-                }
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+                    .clickable(onClick = onBack),
+                shape = CircleShape,
+                color = Color(0xB3000000)
+            ) {
+                Icon(
+                    imageVector = BackIcon,
+                    contentDescription = "Back",
+                    tint = Color.White,
+                    modifier = Modifier.padding(10.dp).size(22.dp)
+                )
             }
-            Text(
-                modifier = Modifier.align(Alignment.TopStart).clickable(onClick = onBack).padding(16.dp),
-                text = "←",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                modifier = Modifier.align(Alignment.TopEnd).clickable(onClick = onSettingsClick).padding(16.dp),
-                text = "⚙",
-                color = Color.White
-            )
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .clickable(onClick = onSettingsClick),
+                shape = CircleShape,
+                color = Color(0xB3000000)
+            ) {
+                Icon(
+                    imageVector = SettingsIcon,
+                    contentDescription = "Playback settings",
+                    tint = Color.White,
+                    modifier = Modifier.padding(10.dp).size(22.dp)
+                )
+            }
             item.actionText?.let { duration ->
                 Surface(
                     modifier = Modifier.align(Alignment.BottomEnd).padding(12.dp),
@@ -117,12 +125,6 @@ private fun VideoPlayerArea(
                 }
             }
         }
-        LinearProgressIndicator(
-            progress = { 0.35f },
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).height(3.dp),
-            color = Color(0xFFFF0000),
-            trackColor = Color(0x33FFFFFF)
-        )
     }
 }
 
@@ -171,22 +173,26 @@ private fun ActionButtonsRow() {
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        ActionButton("👍", "53")
-        ActionButton("👎", "")
-        ActionButton("↗", "Share")
-        ActionButton("💾", "Save")
+        ActionButton(LikeIcon, "Like", "53")
+        ActionButton(DislikeIcon, "Dislike")
+        ActionButton(ShareIcon, "Share")
+        ActionButton(SaveIcon, "Save")
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
-private fun ActionButton(icon: String, label: String) {
+private fun ActionButton(
+    icon: ImageVector,
+    label: String,
+    trailingText: String = ""
+) {
     Surface(shape = RoundedCornerShape(20.dp), color = Color(0xFFF1F1F1)) {
         Row(modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(text = icon)
-            if (label.isNotEmpty()) {
+            Icon(imageVector = icon, contentDescription = label, modifier = Modifier.size(18.dp))
+            if (trailingText.isNotEmpty()) {
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(text = label, style = MaterialTheme.typography.labelMedium)
+                Text(text = trailingText, style = MaterialTheme.typography.labelMedium)
             }
         }
     }
@@ -229,15 +235,12 @@ private fun RelatedVideoRow(item: FeedItem, onClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 16.dp)
     ) {
-        Box(
+        AssetThumbnail(
+            item = item,
             modifier = Modifier
                 .width(160.dp)
                 .aspectRatio(16f / 9f)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Brush.linearGradient(listOf(item.accentStart.toPlayColor(), item.accentEnd.toPlayColor()))),
-            contentAlignment = Alignment.Center
         ) {
-            Text(text = item.thumbnailLabel, color = Color.White, fontWeight = FontWeight.Bold)
             item.actionText?.let { duration ->
                 Surface(
                     modifier = Modifier.align(Alignment.BottomEnd).padding(4.dp),
@@ -260,10 +263,6 @@ private fun RelatedVideoRow(item: FeedItem, onClick: () -> Unit) {
             Text(text = item.creator, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
             Text(text = item.metadata, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
         }
-        Text(text = "⋮", color = Color(0xFF737373))
+        Icon(imageVector = MoreIcon, contentDescription = "More", tint = Color(0xFF737373), modifier = Modifier.size(18.dp))
     }
-}
-
-private fun String.toPlayColor(): Color {
-    return runCatching { Color(parseColor(this)) }.getOrDefault(Color(0xFF374151))
 }

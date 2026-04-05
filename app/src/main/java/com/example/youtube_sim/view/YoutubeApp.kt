@@ -1,4 +1,4 @@
-package com.example.youtube_sim.view
+﻿package com.example.youtube_sim.view
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,8 +15,8 @@ import com.example.youtube_sim.view.component.HomeScreen
 import com.example.youtube_sim.view.component.NotificationsScreen
 import com.example.youtube_sim.view.component.PlaceholderScreen
 import com.example.youtube_sim.view.component.PlaylistScreen
-import com.example.youtube_sim.view.component.SectionLandingScreen
 import com.example.youtube_sim.view.component.SettingsScreen
+import com.example.youtube_sim.view.component.ShortsScreen
 import com.example.youtube_sim.view.component.SubscriptionsScreen
 import com.example.youtube_sim.view.component.VideoPlayScreen
 import com.example.youtube_sim.view.component.YouScreen
@@ -27,6 +27,7 @@ fun YoutubeApp(
 ) {
     val state = presenter.uiState
     val itemMap = state.homeTabs.flatMap { it.items }.associateBy { it.id }
+    val shortsItems = state.homeTabs.firstOrNull { it.key == "shorts" }?.items.orEmpty()
 
     when (val overlay = state.overlay) {
         is OverlayState.Placeholder -> {
@@ -101,7 +102,10 @@ fun YoutubeApp(
         }
 
         is OverlayState.VideoPlay -> {
-            val relatedItems = state.homeTabs.flatMap { it.items }.filter { it.id != overlay.item.id }
+            val relatedItems = state.homeTabs
+                .filter { it.key != "shorts" }
+                .flatMap { it.items }
+                .filter { it.id != overlay.item.id }
             VideoPlayScreen(
                 item = overlay.item,
                 relatedItems = relatedItems,
@@ -143,11 +147,9 @@ fun YoutubeApp(
             }
 
             RootTab.SHORTS -> {
-                SectionLandingScreen(
+                ShortsScreen(
                     modifier = Modifier.padding(innerPadding),
-                    title = "Shorts",
-                    description = "Shorts is reserved as a placeholder entry for later work.",
-                    emoji = "🎞"
+                    items = shortsItems
                 )
             }
 
@@ -164,7 +166,10 @@ fun YoutubeApp(
                     modifier = Modifier.padding(innerPadding),
                     actions = state.headerActions,
                     historyPreviews = state.historyPreviews,
+                    historySections = state.historySections,
                     playlistPreviews = state.playlistPreviews,
+                    playlistDetails = state.playlistDetails,
+                    itemsById = itemMap,
                     entries = state.youEntries,
                     onActionSelected = presenter::onHeaderActionSelected,
                     onEntrySelected = presenter::onYouEntrySelected

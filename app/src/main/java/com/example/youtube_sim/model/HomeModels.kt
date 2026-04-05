@@ -1,4 +1,4 @@
-package com.example.youtube_sim.model
+﻿package com.example.youtube_sim.model
 
 enum class FeedItemType {
     AD,
@@ -8,10 +8,10 @@ enum class FeedItemType {
 }
 
 enum class RootTab(val label: String, val emoji: String) {
-    HOME("Home", "⌂"),
-    SHORTS("Shorts", "▶"),
-    SUBSCRIPTIONS("Subscriptions", "▣"),
-    YOU("You", "◉")
+    HOME("Home", "H"),
+    SHORTS("Shorts", "S"),
+    SUBSCRIPTIONS("Subscriptions", "Sub"),
+    YOU("You", "Y")
 }
 
 data class HomeTabContent(
@@ -31,6 +31,7 @@ data class FeedItem(
     val badgeText: String?,
     val sectionTitle: String?,
     val thumbnailLabel: String,
+    val assetPath: String?,
     val accentStart: String,
     val accentEnd: String
 )
