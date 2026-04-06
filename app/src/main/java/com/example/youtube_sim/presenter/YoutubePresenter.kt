@@ -10,6 +10,9 @@ class YoutubePresenter(
     repository: HomeFeedRepository
 ) : YoutubePresenterContract {
 
+    private val initialCurrentVideoSelection = defaultSelections.getValue("quality_current_video")
+    private val initialResolutionLabel = resolutionForCurrentVideo(initialCurrentVideoSelection)
+
     override var uiState by mutableStateOf(
         YoutubeUiState(
             homeTabs = repository.loadTabs(),
@@ -24,10 +27,15 @@ class YoutubePresenter(
             settingsGroups = settingsGroups,
             generalSettings = generalSettings,
             notificationSettings = notificationSettings,
+            languageOptions = languageOptions,
+            qualityPreferenceSections = qualityPreferenceSections,
+            currentVideoQualityOptions = currentVideoQualityOptions,
             toggleStates = defaultToggles,
-            playSettingsItems = playSettingsItems,
+            selectedOptions = defaultSelections,
+            playSettingsItems = buildPlaySettingsItems(initialCurrentVideoSelection, initialResolutionLabel),
             playSettingsMoreItems = playSettingsMoreItems,
-            comments = comments
+            comments = comments,
+            currentVideoResolutionLabel = initialResolutionLabel
         )
     )
         private set
@@ -85,6 +93,8 @@ class YoutubePresenter(
             "__back_to_settings__" -> uiState = uiState.copy(overlay = OverlayState.Settings)
             "General" -> uiState = uiState.copy(overlay = OverlayState.General)
             "Notifications" -> uiState = uiState.copy(overlay = OverlayState.Notifications)
+            "Languages" -> uiState = uiState.copy(overlay = OverlayState.Languages)
+            "Quality" -> uiState = uiState.copy(overlay = OverlayState.Quality)
             else -> showPlaceholder(label, "$label is kept as a placeholder entry.")
         }
     }
@@ -96,6 +106,20 @@ class YoutubePresenter(
     override fun onToggle(key: String) {
         val current = uiState.toggleStates[key] ?: false
         uiState = uiState.copy(toggleStates = uiState.toggleStates + (key to !current))
+    }
+
+    override fun onSelectionChanged(groupKey: String, optionKey: String) {
+        val updatedSelections = uiState.selectedOptions + (groupKey to optionKey)
+        if (groupKey == "quality_current_video") {
+            val resolutionLabel = resolutionForCurrentVideo(optionKey)
+            uiState = uiState.copy(
+                selectedOptions = updatedSelections,
+                playSettingsItems = buildPlaySettingsItems(optionKey, resolutionLabel),
+                currentVideoResolutionLabel = resolutionLabel
+            )
+        } else {
+            uiState = uiState.copy(selectedOptions = updatedSelections)
+        }
     }
 
     override fun dismissOverlay() {

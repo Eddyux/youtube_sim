@@ -12,8 +12,10 @@ import com.example.youtube_sim.view.component.BottomBar
 import com.example.youtube_sim.view.component.GeneralScreen
 import com.example.youtube_sim.view.component.HistoryScreen
 import com.example.youtube_sim.view.component.HomeScreen
+import com.example.youtube_sim.view.component.LanguageSettingsScreen
 import com.example.youtube_sim.view.component.NotificationsScreen
 import com.example.youtube_sim.view.component.PlaceholderScreen
+import com.example.youtube_sim.view.component.QualitySettingsScreen
 import com.example.youtube_sim.view.component.PlaylistScreen
 import com.example.youtube_sim.view.component.SettingsScreen
 import com.example.youtube_sim.view.component.ShortsScreen
@@ -68,6 +70,38 @@ fun YoutubeApp(
             return
         }
 
+        OverlayState.Languages -> {
+            LanguageSettingsScreen(
+                options = state.languageOptions,
+                selectedKey = state.selectedOptions["app_language"].orEmpty(),
+                onLanguageSelected = { presenter.onSelectionChanged("app_language", it) },
+                onPreferredLanguagesClick = {
+                    presenter.showPlaceholder(
+                        "Preferred Languages",
+                        "Preferred language ordering is kept as a placeholder for later work."
+                    )
+                },
+                onLearnMoreClick = {
+                    presenter.showPlaceholder(
+                        "Learn more",
+                        "This help entry is kept as a placeholder for later work."
+                    )
+                },
+                onBack = { presenter.onSettingsItemSelected("__back_to_settings__") }
+            )
+            return
+        }
+
+        OverlayState.Quality -> {
+            QualitySettingsScreen(
+                sections = state.qualityPreferenceSections,
+                selectedOptions = state.selectedOptions,
+                onOptionSelected = presenter::onSelectionChanged,
+                onBack = { presenter.onSettingsItemSelected("__back_to_settings__") }
+            )
+            return
+        }
+
         OverlayState.History -> {
             HistoryScreen(
                 sections = state.historySections,
@@ -111,10 +145,16 @@ fun YoutubeApp(
                 relatedItems = relatedItems,
                 comments = state.comments,
                 toggleStates = state.toggleStates,
+                selectedOptions = state.selectedOptions,
                 playSettingsItems = state.playSettingsItems,
                 playSettingsMoreItems = state.playSettingsMoreItems,
+                currentVideoQualityOptions = state.currentVideoQualityOptions,
+                currentVideoResolutionLabel = state.currentVideoResolutionLabel,
                 onToggle = presenter::onToggle,
+                onSelectionChanged = presenter::onSelectionChanged,
                 onFeedItemSelected = presenter::onFeedItemSelected,
+                onOpenGlobalQuality = { presenter.onSettingsItemSelected("Quality") },
+                onPlaceholderRequested = presenter::showPlaceholder,
                 onBack = presenter::dismissOverlay
             )
             return

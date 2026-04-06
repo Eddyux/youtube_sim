@@ -32,6 +32,7 @@ import com.example.youtube_sim.model.PlaySettingsMenuItem
 fun PlaySettingsSheet(
     items: List<PlaySettingsMenuItem>,
     onDismiss: () -> Unit,
+    onItemSelected: (String) -> Unit,
     onMoreClick: () -> Unit
 ) {
     Box(
@@ -54,7 +55,7 @@ fun PlaySettingsSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if (item.key == "more") onMoreClick() else onDismiss()
+                                if (item.key == "more") onMoreClick() else onItemSelected(item.key)
                             }
                             .padding(horizontal = 20.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically

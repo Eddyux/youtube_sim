@@ -48,7 +48,7 @@ fun GeneralScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
+            .background(Color(0xFFFAFAFA))
             .windowInsetsPadding(WindowInsets.statusBars)
             .padding(horizontal = 16.dp, vertical = 18.dp)
     ) {
@@ -65,7 +65,7 @@ fun GeneralScreen(
                 hasToggle = item.hasToggle,
                 checked = toggleStates[item.key] ?: false,
                 onToggle = { onToggle(item.key) },
-                darkMode = true
+                darkMode = false
             )
         }
     }
@@ -81,7 +81,7 @@ fun NotificationsScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
+            .background(Color(0xFFFAFAFA))
             .windowInsetsPadding(WindowInsets.statusBars)
             .padding(horizontal = 16.dp, vertical = 18.dp)
     ) {
@@ -90,7 +90,7 @@ fun NotificationsScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = "Mobile notifications",
-                color = Color.White,
+                color = Color(0xFF111827),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -105,7 +105,7 @@ fun NotificationsScreen(
                 hasToggle = item.hasToggle,
                 checked = toggleStates[item.key] ?: false,
                 onToggle = { onToggle(item.key) },
-                darkMode = true
+                darkMode = false
             )
         }
     }
@@ -120,19 +120,19 @@ private fun ScreenTitleRow(
         Surface(
             modifier = Modifier.clickable(onClick = onBack),
             shape = CircleShape,
-            color = Color(0xFF262626)
+            color = Color(0xFFF1F5F9)
         ) {
             Icon(
                 imageVector = BackIcon,
                 contentDescription = "Back",
                 modifier = Modifier.padding(8.dp).size(20.dp),
-                tint = Color.White
+                tint = Color(0xFF111827)
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
-            color = Color.White,
+            color = Color(0xFF111827),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )

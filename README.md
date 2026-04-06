@@ -7,8 +7,8 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `Home` keeps the main chip flow with `All`, `Podcasts`, `Music`, `Apple`, and `Live`.
 - `Subscriptions` stays available as its own bottom-tab screen.
 - `You` now keeps the requirement-based layout: account header, history covers, playlist covers, `Your videos`, `Movies`, and a Premium promo card.
-- `Settings` stays reachable, with `General` and `Notifications` subpages preserved.
-- `Video Play` keeps the player, visible seek bar, comments entry, related videos, and playback settings sheets.
+- `Settings` now includes `General`, `Notifications`, `Languages`, and `Quality` subpages.
+- `Video Play` keeps the player, visible seek bar, comments entry, related videos, and playback settings sheets, including the current-video quality menu.
 - `Shorts` uses a vertical one-video-at-a-time feed backed by local asset videos.
 
 ## Local video support
@@ -31,8 +31,11 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `app/src/main/java/com/example/youtube_sim/view/component/LibraryScreens.kt` - history and playlist screens
 - `app/src/main/java/com/example/youtube_sim/view/component/SettingsScreen.kt` - settings list
 - `app/src/main/java/com/example/youtube_sim/view/component/SettingsSubScreens.kt` - general and notifications screens
+- `app/src/main/java/com/example/youtube_sim/view/component/LanguageSettingsScreen.kt` - languages page and app language dialog
+- `app/src/main/java/com/example/youtube_sim/view/component/QualitySettingsScreen.kt` - global video quality preferences
 - `app/src/main/java/com/example/youtube_sim/view/component/VideoPlayScreen.kt` - watch screen overlays
 - `app/src/main/java/com/example/youtube_sim/view/component/PlaySettingsSheets.kt` - playback settings sheets
+- `app/src/main/java/com/example/youtube_sim/view/component/PlayCurrentVideoQualitySheet.kt` - current-video quality chooser
 - `app/src/main/java/com/example/youtube_sim/view/component/CommentsSheet.kt` - comments bottom sheet
 - `app/src/main/java/com/example/youtube_sim/view/component/ShortsScreen.kt` - shorts pager UI
 
@@ -49,4 +52,9 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - Added the missing `Your videos`, `Movies`, playlist `+` action, and Premium promo block to the `You` page.
 - Preserved and refreshed `Settings`, `General`, `Notifications`, playback settings, and comments instead of trimming them away.
 - Expanded the notifications settings list so it better matches the reference screen.
+- Added the `Languages` page with the `App language` selection dialog and placeholder entry points for preferred-language follow-up work.
+- Added the `Quality` settings page plus the in-player `Quality for current video` bottom sheet.
+- Removed the duplicated `History`, `Playlists`, and `Settings` rows from the bottom of the `You` page.
+- Switched the `General`, `Notifications`, and `Quality` settings screens to a light background style.
+- Switched the `Languages` page and its app-language dialog to the same light settings style.
 - Replaced garbled button and icon labels with readable text across the restored screens.

@@ -98,8 +98,9 @@ fun YouScreen(
         section.entries.firstOrNull()?.itemId?.let(itemsById::get)
     }
     val featuredEntryKeys = setOf("your-videos", "movies")
+    val sectionEntryKeys = setOf("history", "playlists", "settings")
     val featuredEntries = entries.filter { it.key in featuredEntryKeys }
-    val secondaryEntries = entries.filterNot { it.key in featuredEntryKeys }
+    val secondaryEntries = entries.filterNot { it.key in featuredEntryKeys || it.key in sectionEntryKeys }
 
     LazyColumn(
         modifier = modifier

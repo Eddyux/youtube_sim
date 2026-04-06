@@ -11,6 +11,9 @@ import com.example.youtube_sim.model.NotificationSettingsItem
 import com.example.youtube_sim.model.PlaySettingsMenuItem
 import com.example.youtube_sim.model.PlaylistDetail
 import com.example.youtube_sim.model.PlaylistPreview
+import com.example.youtube_sim.model.LanguageOption
+import com.example.youtube_sim.model.QualityOption
+import com.example.youtube_sim.model.QualityPreferenceSection
 import com.example.youtube_sim.model.RootTab
 import com.example.youtube_sim.model.SettingsGroup
 import com.example.youtube_sim.model.SubscriptionGroup
@@ -26,6 +29,8 @@ sealed interface OverlayState {
     data object Settings : OverlayState
     data object General : OverlayState
     data object Notifications : OverlayState
+    data object Languages : OverlayState
+    data object Quality : OverlayState
     data object History : OverlayState
     data class Playlist(val key: String) : OverlayState
     data class VideoPlay(val item: FeedItem) : OverlayState
@@ -46,10 +51,15 @@ data class YoutubeUiState(
     val settingsGroups: List<SettingsGroup> = emptyList(),
     val generalSettings: List<GeneralSettingsItem> = emptyList(),
     val notificationSettings: List<NotificationSettingsItem> = emptyList(),
+    val languageOptions: List<LanguageOption> = emptyList(),
+    val qualityPreferenceSections: List<QualityPreferenceSection> = emptyList(),
+    val currentVideoQualityOptions: List<QualityOption> = emptyList(),
     val toggleStates: Map<String, Boolean> = emptyMap(),
+    val selectedOptions: Map<String, String> = emptyMap(),
     val playSettingsItems: List<PlaySettingsMenuItem> = emptyList(),
     val playSettingsMoreItems: List<PlaySettingsMenuItem> = emptyList(),
     val comments: List<VideoComment> = emptyList(),
+    val currentVideoResolutionLabel: String = "360p",
     val overlay: OverlayState? = null
 )
 
@@ -64,5 +74,6 @@ interface YoutubePresenterContract {
     fun onSettingsItemSelected(label: String)
     fun showPlaceholder(title: String, description: String)
     fun onToggle(key: String)
+    fun onSelectionChanged(groupKey: String, optionKey: String)
     fun dismissOverlay()
 }
