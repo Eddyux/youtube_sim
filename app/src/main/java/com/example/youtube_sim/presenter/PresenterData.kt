@@ -1,10 +1,14 @@
 package com.example.youtube_sim.presenter
 
 import com.example.youtube_sim.model.HeaderAction
+import com.example.youtube_sim.model.ChannelProfile
+import com.example.youtube_sim.model.FeedItem
 import com.example.youtube_sim.model.HistoryEntry
 import com.example.youtube_sim.model.HistoryPreview
 import com.example.youtube_sim.model.HistorySection
 import com.example.youtube_sim.model.HomeChip
+import com.example.youtube_sim.model.HomeTabContent
+import com.example.youtube_sim.model.OverflowMenuAction
 import com.example.youtube_sim.model.PlaylistDetail
 import com.example.youtube_sim.model.PlaylistPreview
 import com.example.youtube_sim.model.SubscriptionChannel
@@ -54,7 +58,7 @@ internal val subscriptionGroups = listOf(
     SubscriptionGroup(
         title = "Music",
         channels = listOf(
-            SubscriptionChannel("M2M", false),
+            SubscriptionChannel("Jay Chou", true),
             SubscriptionChannel("Neko Music", false),
             SubscriptionChannel("Post Malone", true)
         )
@@ -107,11 +111,6 @@ internal val historySections = listOf(
     )
 )
 
-internal val playlistPreviews = listOf(
-    PlaylistPreview(key = "watch_later", title = "Watch later", privacy = "Private", count = "3"),
-    PlaylistPreview(key = "liked_videos", title = "Liked videos", privacy = "Private", count = "3")
-)
-
 internal val playlistDetails = listOf(
     PlaylistDetail(
         key = "watch_later",
@@ -127,6 +126,23 @@ internal val playlistDetails = listOf(
         description = "Videos you have already marked with a like.",
         itemIds = listOf("music-taylor-ophelia", "shorts-unboxing-mac-desktop", "music-jay-chou-i-do")
     )
+)
+
+internal val historyOverflowActions = listOf(
+    OverflowMenuAction("queue", "Play next in queue"),
+    OverflowMenuAction("watch_later", "Save to Watch later"),
+    OverflowMenuAction("playlist", "Save to playlist"),
+    OverflowMenuAction("download", "Download video"),
+    OverflowMenuAction("share", "Share"),
+    OverflowMenuAction("remove_history", "Remove from watch history")
+)
+
+internal val playlistOverflowActions = listOf(
+    OverflowMenuAction("queue", "Play next in queue"),
+    OverflowMenuAction("watch_later", "Save to Watch later"),
+    OverflowMenuAction("playlist", "Save to playlist"),
+    OverflowMenuAction("download", "Download video"),
+    OverflowMenuAction("share", "Share")
 )
 
 internal val comments = listOf(
@@ -161,3 +177,87 @@ internal val comments = listOf(
         timeAgo = "3 hours ago"
     )
 )
+
+internal fun buildPlaylistPreviews(details: List<PlaylistDetail>): List<PlaylistPreview> {
+    return details.map { detail ->
+        PlaylistPreview(
+            key = detail.key,
+            title = detail.title,
+            privacy = "Private",
+            count = detail.itemIds.size.toString()
+        )
+    }
+}
+
+internal fun buildChannelProfiles(tabs: List<HomeTabContent>): List<ChannelProfile> {
+    val items = tabs.filter { it.key != "live" }.flatMap { it.items }
+    val groups = items.groupBy { normalizeCreatorKey(it.creator) }
+    return groups.mapNotNull { (key, videos) ->
+        val primary = videos.firstOrNull() ?: return@mapNotNull null
+        val title = preferredChannelTitle(key, primary.creator)
+        val featured = preferredFeaturedItem(key, videos)
+        val hero = preferredHeroItem(key, videos, featured)
+        ChannelProfile(
+            key = key,
+            title = title,
+            handle = "@${key.replace("_", "")}",
+            subscribers = subscriberLabelFor(key),
+            heroItemId = hero.id,
+            featuredItemId = featured.id,
+            videoItemIds = videos.distinctBy(FeedItem::id).map(FeedItem::id),
+            description = channelDescriptionFor(key, title)
+        )
+    }.sortedBy(ChannelProfile::title)
+}
+
+private fun normalizeCreatorKey(creator: String): String {
+    val lowercase = creator.lowercase()
+    return when {
+        "jay chou" in lowercase -> "jay_chou"
+        else -> creator.lowercase().replace(Regex("[^a-z0-9]+"), "_").trim('_')
+    }
+}
+
+private fun preferredChannelTitle(key: String, fallback: String): String {
+    return when (key) {
+        "jay_chou" -> "Jay Chou"
+        else -> fallback
+    }
+}
+
+private fun preferredHeroItem(key: String, videos: List<FeedItem>, featured: FeedItem): FeedItem {
+    return when (key) {
+        "jay_chou" -> videos.firstOrNull { it.id.contains("blue-porcelain") } ?: featured
+        else -> videos.first()
+    }
+}
+
+private fun preferredFeaturedItem(key: String, videos: List<FeedItem>): FeedItem {
+    return when (key) {
+        "jay_chou" -> videos.firstOrNull { it.id.contains("i-do") } ?: videos.first()
+        else -> videos.first()
+    }
+}
+
+private fun subscriberLabelFor(key: String): String {
+    return when (key) {
+        "jay_chou" -> "7.2M subscribers"
+        "apple" -> "18.4M subscribers"
+        "apple_design" -> "1.8M subscribers"
+        "apple_support" -> "1.3M subscribers"
+        "taylor_swift" -> "58.1M subscribers"
+        "tech_yes_city" -> "685K subscribers"
+        else -> "Local creator"
+    }
+}
+
+private fun channelDescriptionFor(key: String, title: String): String {
+    return when (key) {
+        "jay_chou" -> "Mandopop classics, restored music videos, and signature cinematic releases."
+        "apple" -> "Product launches and polished teaser videos from the local asset set."
+        "apple_design" -> "Design-driven hardware stories and behind-the-scenes product breakdowns."
+        "apple_support" -> "Practical iPhone walkthroughs and support-focused quick guides."
+        "tech_yes_city" -> "PC building advice, benchmark talk, and compact desktop experiments."
+        else -> "$title videos collected from the local library."
+    }
+}

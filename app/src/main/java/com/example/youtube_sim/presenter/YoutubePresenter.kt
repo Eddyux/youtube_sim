@@ -9,21 +9,24 @@ import com.example.youtube_sim.model.RootTab
 class YoutubePresenter(
     repository: HomeFeedRepository
 ) : YoutubePresenterContract {
-
+    private val initialTabs = repository.loadTabs()
     private val initialCurrentVideoSelection = defaultSelections.getValue("quality_current_video")
     private val initialResolutionLabel = resolutionForCurrentVideo(initialCurrentVideoSelection)
 
     override var uiState by mutableStateOf(
         YoutubeUiState(
-            homeTabs = repository.loadTabs(),
+            homeTabs = initialTabs,
             homeChips = homeChips,
             headerActions = headerActions,
             youEntries = youEntries,
             subscriptionGroups = subscriptionGroups,
             historyPreviews = historyPreviews,
             historySections = historySections,
-            playlistPreviews = playlistPreviews,
+            playlistPreviews = buildPlaylistPreviews(playlistDetails),
             playlistDetails = playlistDetails,
+            historyOverflowActions = historyOverflowActions,
+            playlistOverflowActions = playlistOverflowActions,
+            channelProfiles = buildChannelProfiles(initialTabs),
             settingsGroups = settingsGroups,
             generalSettings = generalSettings,
             notificationSettings = notificationSettings,
@@ -56,7 +59,8 @@ class YoutubePresenter(
     override fun onHeaderActionSelected(key: String) {
         val action = headerActions.firstOrNull { it.key == key } ?: return
         when (key) {
-            "notifications" -> uiState = uiState.copy(overlay = OverlayState.Notifications)
+            "notifications" -> uiState = uiState.copy(overlay = OverlayState.NotificationInbox)
+            "search" -> uiState = uiState.copy(overlay = OverlayState.Search)
             else -> showPlaceholder(action.label, "${action.label} is kept as an entry point for later work.")
         }
     }
@@ -70,9 +74,62 @@ class YoutubePresenter(
         }
     }
 
+    override fun onChannelSelected(key: String) {
+        val channelKey = normalizeChannelKey(key)
+        val profile = uiState.channelProfiles.firstOrNull { it.key == channelKey }
+        if (profile != null) {
+            uiState = uiState.copy(overlay = OverlayState.Channel(profile.key))
+        } else {
+            showPlaceholder("Channel", "This creator page is reserved for later work.")
+        }
+    }
+
+    override fun onChannelSubscriptionToggle(key: String) {
+        val subscriptions = uiState.subscribedChannels.toMutableSet()
+        if (!subscriptions.add(key)) {
+            subscriptions.remove(key)
+        }
+        uiState = uiState.copy(subscribedChannels = subscriptions)
+    }
+
+    override fun onHistoryOverflowAction(itemId: String, actionKey: String) {
+        when (actionKey) {
+            "watch_later" -> addItemToPlaylist("watch_later", itemId)
+            "remove_history" -> {
+                val updatedSections = uiState.historySections.mapNotNull { section ->
+                    val remaining = section.entries.filterNot { it.itemId == itemId }
+                    if (remaining.isEmpty()) null else section.copy(entries = remaining)
+                }
+                uiState = uiState.copy(historySections = updatedSections)
+            }
+            else -> Unit
+        }
+    }
+
+    override fun onPlaylistOverflowAction(playlistKey: String, itemId: String, actionKey: String) {
+        when (actionKey) {
+            "watch_later" -> addItemToPlaylist("watch_later", itemId)
+            "remove_playlist" -> {
+                val updatedDetails = uiState.playlistDetails.map { detail ->
+                    if (detail.key == playlistKey) {
+                        detail.copy(itemIds = detail.itemIds.filterNot { it == itemId })
+                    } else {
+                        detail
+                    }
+                }
+                uiState = uiState.copy(
+                    playlistDetails = updatedDetails,
+                    playlistPreviews = buildPlaylistPreviews(updatedDetails)
+                )
+            }
+            else -> Unit
+        }
+    }
+
     override fun onYouEntrySelected(key: String) {
         when (key) {
             "history" -> uiState = uiState.copy(overlay = OverlayState.History)
+            "playlists" -> uiState = uiState.copy(overlay = OverlayState.Playlists)
             "settings" -> uiState = uiState.copy(overlay = OverlayState.Settings)
             "watch_later", "liked_videos" -> uiState = uiState.copy(overlay = OverlayState.Playlist(key))
             else -> {
@@ -92,11 +149,15 @@ class YoutubePresenter(
         when (label) {
             "__back_to_settings__" -> uiState = uiState.copy(overlay = OverlayState.Settings)
             "General" -> uiState = uiState.copy(overlay = OverlayState.General)
-            "Notifications" -> uiState = uiState.copy(overlay = OverlayState.Notifications)
+            "Notifications" -> uiState = uiState.copy(overlay = OverlayState.NotificationSettings)
             "Languages" -> uiState = uiState.copy(overlay = OverlayState.Languages)
             "Quality" -> uiState = uiState.copy(overlay = OverlayState.Quality)
             else -> showPlaceholder(label, "$label is kept as a placeholder entry.")
         }
+    }
+
+    override fun onSearchQueryChanged(query: String) {
+        uiState = uiState.copy(searchQuery = query)
     }
 
     override fun showPlaceholder(title: String, description: String) {
@@ -123,6 +184,35 @@ class YoutubePresenter(
     }
 
     override fun dismissOverlay() {
-        uiState = uiState.copy(overlay = null)
+        val fallbackOverlay = when (uiState.overlay) {
+            OverlayState.General,
+            OverlayState.NotificationSettings,
+            OverlayState.Languages,
+            OverlayState.Quality -> OverlayState.Settings
+            else -> null
+        }
+        uiState = uiState.copy(overlay = fallbackOverlay)
+    }
+
+    private fun normalizeChannelKey(value: String): String {
+        val lowercase = value.lowercase()
+        return when {
+            "jay chou" in lowercase -> "jay_chou"
+            else -> lowercase.replace(Regex("[^a-z0-9]+"), "_").trim('_')
+        }
+    }
+
+    private fun addItemToPlaylist(playlistKey: String, itemId: String) {
+        val updatedDetails = uiState.playlistDetails.map { detail ->
+            if (detail.key == playlistKey && itemId !in detail.itemIds) {
+                detail.copy(itemIds = listOf(itemId) + detail.itemIds)
+            } else {
+                detail
+            }
+        }
+        uiState = uiState.copy(
+            playlistDetails = updatedDetails,
+            playlistPreviews = buildPlaylistPreviews(updatedDetails)
+        )
     }
 }

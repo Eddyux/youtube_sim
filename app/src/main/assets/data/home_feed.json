@@ -248,35 +248,28 @@
         {
           "id": "live-spacex",
           "type": "live",
-          "title": "SpaceX Falcon 9 Launch Live",
+          "title": "SpaceX Falcon 9 Landing Live",
           "creator": "APT",
           "metadata": "181 watching",
           "badgeText": "LIVE",
-          "thumbnailLabel": "Launch",
-          "accentStart": "#111827",
-          "accentEnd": "#1D4ED8"
-        },
-        {
-          "id": "live-middle-east",
-          "type": "live",
-          "title": "Israel-Iran Breaking Coverage",
-          "creator": "WLA",
-          "metadata": "58 watching",
-          "badgeText": "LIVE",
-          "thumbnailLabel": "News",
-          "accentStart": "#7F1D1D",
-          "accentEnd": "#1F2937"
+          "thumbnailLabel": "SpaceX",
+          "accentStart": "#0F172A",
+          "accentEnd": "#38BDF8",
+          "imagePath": "data/live/spacex_launch.png",
+          "actionText": "Live replay"
         },
         {
           "id": "live-lck",
           "type": "live",
-          "title": "2026 LCK Spring Split",
+          "title": "2026 LCK Spring Primer",
           "creator": "LCK Global",
           "metadata": "18K watching",
           "badgeText": "LIVE",
-          "thumbnailLabel": "LCK",
-          "accentStart": "#0F766E",
-          "accentEnd": "#164E63"
+          "thumbnailLabel": "LCK 26",
+          "accentStart": "#1E1B4B",
+          "accentEnd": "#7C3AED",
+          "imagePath": "data/live/lck_spring_2026.png",
+          "actionText": "Live replay"
         }
       ]
     }

@@ -42,14 +42,24 @@ fun VideoPlayContent(
     item: FeedItem,
     relatedItems: List<FeedItem>,
     comments: List<VideoComment>,
+    isCreatorSubscribed: Boolean,
     onFeedItemSelected: (String) -> Unit,
+    onChannelSelected: (String) -> Unit,
+    onSubscriptionToggle: () -> Unit,
     onBack: () -> Unit,
     onSettingsClick: () -> Unit,
     onCommentsClick: () -> Unit
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item { VideoPlayerArea(item = item, onBack = onBack, onSettingsClick = onSettingsClick) }
-        item { VideoInfoSection(item = item) }
+        item {
+            VideoInfoSection(
+                item = item,
+                isCreatorSubscribed = isCreatorSubscribed,
+                onChannelSelected = onChannelSelected,
+                onSubscriptionToggle = onSubscriptionToggle
+            )
+        }
         item { ActionButtonsRow() }
         item { CommentsPreview(comments = comments, onClick = onCommentsClick) }
         items(relatedItems, key = FeedItem::id) { related ->
@@ -129,7 +139,12 @@ private fun VideoPlayerArea(
 }
 
 @Composable
-private fun VideoInfoSection(item: FeedItem) {
+private fun VideoInfoSection(
+    item: FeedItem,
+    isCreatorSubscribed: Boolean,
+    onChannelSelected: (String) -> Unit,
+    onSubscriptionToggle: () -> Unit
+) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
         Text(
             text = item.title,
@@ -141,7 +156,10 @@ private fun VideoInfoSection(item: FeedItem) {
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = item.metadata, style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
         Spacer(modifier = Modifier.height(12.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth().clickable { onChannelSelected(item.creator) },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
                 modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0xFFE5E7EB)),
                 contentAlignment = Alignment.Center
@@ -155,11 +173,15 @@ private fun VideoInfoSection(item: FeedItem) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f)
             )
-            Surface(shape = RoundedCornerShape(18.dp), color = Color.Black) {
+            Surface(
+                modifier = Modifier.clickable(onClick = onSubscriptionToggle),
+                shape = RoundedCornerShape(18.dp),
+                color = if (isCreatorSubscribed) Color(0xFFE5E7EB) else Color.Black
+            ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = "Subscribe",
-                    color = Color.White,
+                    text = if (isCreatorSubscribed) "Subscribed" else "Subscribe",
+                    color = if (isCreatorSubscribed) Color(0xFF111827) else Color.White,
                     style = MaterialTheme.typography.labelLarge
                 )
             }

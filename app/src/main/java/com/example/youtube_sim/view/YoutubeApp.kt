@@ -9,14 +9,18 @@ import com.example.youtube_sim.model.RootTab
 import com.example.youtube_sim.presenter.OverlayState
 import com.example.youtube_sim.presenter.YoutubePresenterContract
 import com.example.youtube_sim.view.component.BottomBar
+import com.example.youtube_sim.view.component.ChannelScreen
 import com.example.youtube_sim.view.component.GeneralScreen
 import com.example.youtube_sim.view.component.HistoryScreen
 import com.example.youtube_sim.view.component.HomeScreen
 import com.example.youtube_sim.view.component.LanguageSettingsScreen
+import com.example.youtube_sim.view.component.NotificationInboxScreen
 import com.example.youtube_sim.view.component.NotificationsScreen
 import com.example.youtube_sim.view.component.PlaceholderScreen
+import com.example.youtube_sim.view.component.PlaylistsOverviewScreen
 import com.example.youtube_sim.view.component.QualitySettingsScreen
 import com.example.youtube_sim.view.component.PlaylistScreen
+import com.example.youtube_sim.view.component.SearchScreen
 import com.example.youtube_sim.view.component.SettingsScreen
 import com.example.youtube_sim.view.component.ShortsScreen
 import com.example.youtube_sim.view.component.SubscriptionsScreen
@@ -60,13 +64,18 @@ fun YoutubeApp(
             return
         }
 
-        OverlayState.Notifications -> {
+        OverlayState.NotificationSettings -> {
             NotificationsScreen(
                 items = state.notificationSettings,
                 toggleStates = state.toggleStates,
                 onToggle = presenter::onToggle,
                 onBack = { presenter.onSettingsItemSelected("__back_to_settings__") }
             )
+            return
+        }
+
+        OverlayState.NotificationInbox -> {
+            NotificationInboxScreen(onBack = presenter::dismissOverlay)
             return
         }
 
@@ -106,10 +115,40 @@ fun YoutubeApp(
             HistoryScreen(
                 sections = state.historySections,
                 itemsById = itemMap,
+                overflowActions = state.historyOverflowActions,
                 onFeedItemSelected = presenter::onFeedItemSelected,
+                onOverflowAction = presenter::onHistoryOverflowAction,
                 onBack = presenter::dismissOverlay,
                 onBottomTabSelected = presenter::onBottomTabSelected,
-                onPlaceholderRequested = presenter::showPlaceholder
+                onSearchRequested = { presenter.onHeaderActionSelected("search") }
+            )
+            return
+        }
+
+        OverlayState.Playlists -> {
+            PlaylistsOverviewScreen(
+                playlistPreviews = state.playlistPreviews,
+                playlistDetails = state.playlistDetails,
+                itemsById = itemMap,
+                onPlaylistSelected = presenter::onYouEntrySelected,
+                onBack = presenter::dismissOverlay,
+                onCreatePlaylist = {
+                    presenter.showPlaceholder(
+                        "Create new playlist",
+                        "Playlist creation is reserved as a placeholder entry."
+                    )
+                }
+            )
+            return
+        }
+
+        OverlayState.Search -> {
+            SearchScreen(
+                query = state.searchQuery,
+                results = state.homeTabs.filter { it.key != "live" }.flatMap { it.items },
+                onQueryChanged = presenter::onSearchQueryChanged,
+                onFeedItemSelected = presenter::onFeedItemSelected,
+                onBack = presenter::dismissOverlay
             )
             return
         }
@@ -120,10 +159,12 @@ fun YoutubeApp(
                 PlaylistScreen(
                     playlist = playlist,
                     itemsById = itemMap,
+                    overflowActions = state.playlistOverflowActions,
                     onFeedItemSelected = presenter::onFeedItemSelected,
+                    onOverflowAction = presenter::onPlaylistOverflowAction,
                     onBack = presenter::dismissOverlay,
                     onBottomTabSelected = presenter::onBottomTabSelected,
-                    onPlaceholderRequested = presenter::showPlaceholder
+                    onSearchRequested = { presenter.onHeaderActionSelected("search") }
                 )
             } else {
                 PlaceholderScreen(
@@ -135,11 +176,38 @@ fun YoutubeApp(
             return
         }
 
+        is OverlayState.Channel -> {
+            val profile = state.channelProfiles.firstOrNull { it.key == overlay.key }
+            if (profile != null) {
+                ChannelScreen(
+                    profile = profile,
+                    heroItem = itemMap[profile.heroItemId],
+                    featuredItem = itemMap[profile.featuredItemId],
+                    videos = profile.videoItemIds.mapNotNull(itemMap::get),
+                    isSubscribed = overlay.key in state.subscribedChannels,
+                    onSubscriptionToggle = { presenter.onChannelSubscriptionToggle(profile.key) },
+                    onFeedItemSelected = presenter::onFeedItemSelected,
+                    onBack = presenter::dismissOverlay
+                )
+            } else {
+                PlaceholderScreen(
+                    title = "Channel",
+                    description = "This creator page is not available yet.",
+                    onBack = presenter::dismissOverlay
+                )
+            }
+            return
+        }
+
         is OverlayState.VideoPlay -> {
             val relatedItems = state.homeTabs
                 .filter { it.key != "shorts" }
                 .flatMap { it.items }
                 .filter { it.id != overlay.item.id }
+            val creatorProfileKey = state.channelProfiles.firstOrNull { profile ->
+                profile.key == normalizeChannelKey(overlay.item.creator) ||
+                    overlay.item.id.contains(profile.key.replace('_', '-'), ignoreCase = true)
+            }?.key
             VideoPlayScreen(
                 item = overlay.item,
                 relatedItems = relatedItems,
@@ -150,9 +218,21 @@ fun YoutubeApp(
                 playSettingsMoreItems = state.playSettingsMoreItems,
                 currentVideoQualityOptions = state.currentVideoQualityOptions,
                 currentVideoResolutionLabel = state.currentVideoResolutionLabel,
+                isCreatorSubscribed = creatorProfileKey != null && creatorProfileKey in state.subscribedChannels,
                 onToggle = presenter::onToggle,
                 onSelectionChanged = presenter::onSelectionChanged,
                 onFeedItemSelected = presenter::onFeedItemSelected,
+                onChannelSelected = presenter::onChannelSelected,
+                onSubscriptionToggle = {
+                    if (creatorProfileKey != null) {
+                        presenter.onChannelSubscriptionToggle(creatorProfileKey)
+                    } else {
+                        presenter.showPlaceholder(
+                            "Subscribe",
+                            "This creator page is not available yet."
+                        )
+                    }
+                },
                 onOpenGlobalQuality = { presenter.onSettingsItemSelected("Quality") },
                 onPlaceholderRequested = presenter::showPlaceholder,
                 onBack = presenter::dismissOverlay
@@ -197,7 +277,7 @@ fun YoutubeApp(
                 SubscriptionsScreen(
                     modifier = Modifier.padding(innerPadding),
                     groups = state.subscriptionGroups,
-                    onChannelSelected = presenter::onFeedItemSelected
+                    onChannelSelected = presenter::onChannelSelected
                 )
             }
 
@@ -205,16 +285,26 @@ fun YoutubeApp(
                 YouScreen(
                     modifier = Modifier.padding(innerPadding),
                     actions = state.headerActions,
-                    historyPreviews = state.historyPreviews,
                     historySections = state.historySections,
                     playlistPreviews = state.playlistPreviews,
                     playlistDetails = state.playlistDetails,
                     itemsById = itemMap,
                     entries = state.youEntries,
                     onActionSelected = presenter::onHeaderActionSelected,
-                    onEntrySelected = presenter::onYouEntrySelected
+                    historyOverflowActions = state.historyOverflowActions,
+                    onEntrySelected = presenter::onYouEntrySelected,
+                    onFeedItemSelected = presenter::onFeedItemSelected,
+                    onHistoryOverflowAction = presenter::onHistoryOverflowAction
                 )
             }
         }
+    }
+}
+
+private fun normalizeChannelKey(value: String): String {
+    val lowercase = value.lowercase()
+    return when {
+        "jay chou" in lowercase -> "jay_chou"
+        else -> lowercase.replace(Regex("[^a-z0-9]+"), "_").trim('_')
     }
 }

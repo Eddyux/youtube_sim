@@ -55,21 +55,32 @@ fun AssetThumbnail(
             .clip(RoundedCornerShape(18.dp))
             .background(Brush.linearGradient(listOf(item.accentStart.toColorOrFallback(), item.accentEnd.toColorOrFallback())))
     ) {
-        if (bitmap != null) {
+        when {
+            item.imagePath != null -> {
+                AssetImage(
+                    imagePath = item.imagePath,
+                    contentDescription = item.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = contentScale
+                )
+            }
+            bitmap != null -> {
             Image(
                 bitmap = bitmap.asImageBitmap(),
                 contentDescription = item.title,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = contentScale
             )
-        } else {
-            Text(
-                modifier = Modifier.align(Alignment.CenterStart).padding(horizontal = 18.dp),
-                text = item.thumbnailLabel,
-                color = Color.White,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+            }
+            else -> {
+                Text(
+                    modifier = Modifier.align(Alignment.CenterStart).padding(horizontal = 18.dp),
+                    text = item.thumbnailLabel,
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
         overlay()
     }
@@ -141,11 +152,20 @@ fun AssetVideoPlayer(
                 }
             )
         } else {
-            AssetThumbnail(
-                item = item,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+            if (item.imagePath != null) {
+                AssetImage(
+                    imagePath = item.imagePath,
+                    contentDescription = item.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                AssetThumbnail(
+                    item = item,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
         overlay()
     }

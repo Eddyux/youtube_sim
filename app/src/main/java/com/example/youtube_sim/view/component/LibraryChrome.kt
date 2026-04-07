@@ -40,9 +40,14 @@ fun LibraryScaffold(
 fun LibraryTopBar(
     title: String,
     onBack: () -> Unit,
-    onPlaceholderRequested: (String, String) -> Unit
+    onSearchRequested: () -> Unit,
+    onMoreRequested: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Surface(
             modifier = Modifier.clickable(onClick = onBack),
             shape = CircleShape,
@@ -62,11 +67,11 @@ fun LibraryTopBar(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
         )
-        HeaderPill(CastIcon, "Cast") { onPlaceholderRequested("Cast", "Cast is reserved as a placeholder entry.") }
+        HeaderPill(CastIcon, "Cast") {}
         Spacer(modifier = Modifier.width(8.dp))
-        HeaderPill(SearchIcon, "Search") { onPlaceholderRequested("Search", "Search is reserved as a placeholder entry.") }
+        HeaderPill(SearchIcon, "Search", onClick = onSearchRequested)
         Spacer(modifier = Modifier.width(8.dp))
-        HeaderPill(MoreIcon, "More") { onPlaceholderRequested("More", "More is reserved as a placeholder entry.") }
+        HeaderPill(MoreIcon, "More", onClick = onMoreRequested)
     }
 }
 

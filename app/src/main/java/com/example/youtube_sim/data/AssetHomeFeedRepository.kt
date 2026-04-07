@@ -48,6 +48,7 @@ class AssetHomeFeedRepository(
             sectionTitle = optString("sectionTitle").ifBlank { null },
             thumbnailLabel = getString("thumbnailLabel"),
             assetPath = optString("assetPath").ifBlank { null },
+            imagePath = optString("imagePath").ifBlank { null },
             accentStart = getString("accentStart"),
             accentEnd = getString("accentEnd")
         )

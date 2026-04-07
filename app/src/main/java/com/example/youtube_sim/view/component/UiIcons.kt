@@ -4,8 +4,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Comment
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
+import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.rounded.Accessibility
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -27,7 +29,6 @@ import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Lock
@@ -79,11 +80,11 @@ internal fun bottomTabIcon(tab: RootTab): ImageVector = when (tab) {
 
 internal fun youEntryIcon(key: String): ImageVector = when (key) {
     "history" -> Icons.Rounded.History
-    "playlists" -> Icons.Rounded.PlaylistPlay
+    "playlists" -> Icons.AutoMirrored.Rounded.PlaylistPlay
     "settings" -> Icons.Rounded.Settings
     "your-videos" -> Icons.Rounded.VideoLibrary
     "movies" -> Icons.Rounded.Movie
-    else -> Icons.Rounded.KeyboardArrowRight
+    else -> Icons.AutoMirrored.Rounded.KeyboardArrowRight
 }
 
 internal fun settingsItemIcon(label: String): ImageVector = when (label) {
@@ -110,7 +111,7 @@ internal fun settingsItemIcon(label: String): ImageVector = when (label) {
     "YouTube Terms of Service" -> Icons.Rounded.Description
     "Send feedback" -> Icons.Rounded.Feedback
     "About" -> Icons.Rounded.Info
-    else -> Icons.Rounded.KeyboardArrowRight
+    else -> Icons.AutoMirrored.Rounded.KeyboardArrowRight
 }
 
 internal fun playSettingIcon(key: String): ImageVector = when (key) {
@@ -130,7 +131,7 @@ internal fun playSettingIcon(key: String): ImageVector = when (key) {
 
 internal val BackIcon = Icons.AutoMirrored.Rounded.ArrowBack
 internal val ChevronDownIcon = Icons.Rounded.KeyboardArrowDown
-internal val ChevronRightIcon = Icons.Rounded.KeyboardArrowRight
+internal val ChevronRightIcon = Icons.AutoMirrored.Rounded.KeyboardArrowRight
 internal val SettingsIcon = Icons.Rounded.Settings
 internal val MoreIcon = Icons.Rounded.MoreVert
 internal val InfoIcon = Icons.Rounded.Info

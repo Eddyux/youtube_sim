@@ -32,6 +32,7 @@ data class FeedItem(
     val sectionTitle: String?,
     val thumbnailLabel: String,
     val assetPath: String?,
+    val imagePath: String?,
     val accentStart: String,
     val accentEnd: String
 )
@@ -94,6 +95,22 @@ data class PlaylistDetail(
     val metadata: String,
     val description: String,
     val itemIds: List<String>
+)
+
+data class OverflowMenuAction(
+    val key: String,
+    val label: String
+)
+
+data class ChannelProfile(
+    val key: String,
+    val title: String,
+    val handle: String,
+    val subscribers: String,
+    val heroItemId: String,
+    val featuredItemId: String,
+    val videoItemIds: List<String>,
+    val description: String
 )
 
 data class SettingsGroup(

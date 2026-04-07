@@ -24,9 +24,12 @@ fun VideoPlayScreen(
     playSettingsMoreItems: List<PlaySettingsMenuItem>,
     currentVideoQualityOptions: List<QualityOption>,
     currentVideoResolutionLabel: String,
+    isCreatorSubscribed: Boolean,
     onToggle: (String) -> Unit,
     onSelectionChanged: (String, String) -> Unit,
     onFeedItemSelected: (String) -> Unit,
+    onChannelSelected: (String) -> Unit,
+    onSubscriptionToggle: () -> Unit,
     onOpenGlobalQuality: () -> Unit,
     onPlaceholderRequested: (String, String) -> Unit,
     onBack: () -> Unit
@@ -41,7 +44,10 @@ fun VideoPlayScreen(
             item = item,
             relatedItems = relatedItems,
             comments = comments,
+            isCreatorSubscribed = isCreatorSubscribed,
             onFeedItemSelected = onFeedItemSelected,
+            onChannelSelected = onChannelSelected,
+            onSubscriptionToggle = onSubscriptionToggle,
             onBack = onBack,
             onSettingsClick = { showSettings = true },
             onCommentsClick = { showComments = true }

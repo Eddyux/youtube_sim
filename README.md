@@ -6,8 +6,11 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 
 - `Home` keeps the main chip flow with `All`, `Podcasts`, `Music`, `Apple`, and `Live`.
 - `Subscriptions` stays available as its own bottom-tab screen.
-- `You` now keeps the requirement-based layout: account header, history covers, playlist covers, `Your videos`, `Movies`, and a Premium promo card.
+- `You` now keeps the requirement-based layout: account header, history video previews, playlist covers, `Your videos`, `Movies`, and a Premium promo card.
 - `Settings` now includes `General`, `Notifications`, `Languages`, and `Quality` subpages.
+- `Search` filters the local asset library by title and creator from the top-right search entry.
+- `Notifications` now has both the settings subpage and the empty-state inbox used by the main bell buttons.
+- `Channel` now includes dynamic creator pages for the local-feed authors, with a working `Subscribe` / `Subscribed` toggle.
 - `Video Play` keeps the player, visible seek bar, comments entry, related videos, and playback settings sheets, including the current-video quality menu.
 - `Shorts` uses a vertical one-video-at-a-time feed backed by local asset videos.
 
@@ -27,7 +30,7 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `app/src/main/java/com/example/youtube_sim/view/component/AppChrome.kt` - shared top and bottom chrome
 - `app/src/main/java/com/example/youtube_sim/view/component/FeedComponents.kt` - home feed UI
 - `app/src/main/java/com/example/youtube_sim/view/component/CollectionScreens.kt` - subscriptions UI
-- `app/src/main/java/com/example/youtube_sim/view/component/SupportingScreens.kt` - You screen and placeholder UI
+- `app/src/main/java/com/example/youtube_sim/view/component/PlaceholderScreen.kt` - reusable in-development screen
 - `app/src/main/java/com/example/youtube_sim/view/component/LibraryScreens.kt` - history and playlist screens
 - `app/src/main/java/com/example/youtube_sim/view/component/SettingsScreen.kt` - settings list
 - `app/src/main/java/com/example/youtube_sim/view/component/SettingsSubScreens.kt` - general and notifications screens
@@ -37,7 +40,12 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `app/src/main/java/com/example/youtube_sim/view/component/PlaySettingsSheets.kt` - playback settings sheets
 - `app/src/main/java/com/example/youtube_sim/view/component/PlayCurrentVideoQualitySheet.kt` - current-video quality chooser
 - `app/src/main/java/com/example/youtube_sim/view/component/CommentsSheet.kt` - comments bottom sheet
+- `app/src/main/java/com/example/youtube_sim/view/component/ChannelScreen.kt` - creator homepage
+- `app/src/main/java/com/example/youtube_sim/view/component/SearchScreen.kt` - local library search
+- `app/src/main/java/com/example/youtube_sim/view/component/NotificationInboxScreen.kt` - notifications empty state
+- `app/src/main/java/com/example/youtube_sim/view/component/OverflowMenus.kt` - shared history and playlist overflow sheets
 - `app/src/main/java/com/example/youtube_sim/view/component/ShortsScreen.kt` - shorts pager UI
+- `app/src/main/java/com/example/youtube_sim/view/component/YouScreen.kt` - You tab layout and history previews
 
 ## Build
 
@@ -58,3 +66,20 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - Switched the `General`, `Notifications`, and `Quality` settings screens to a light background style.
 - Switched the `Languages` page and its app-language dialog to the same light settings style.
 - Replaced garbled button and icon labels with readable text across the restored screens.
+- Added the missing history and playlist overflow menus, including the `Remove from watch history`, `Remove from Liked videos`, and `Remove from Watch later` action sheets.
+- Added local-library search plus a dedicated top-bell notifications inbox page based on `UIReference/ling.jpg`.
+- Added a Jay Chou creator homepage with a real subscribe state toggle and wired it from creator and channel entry points.
+- Added bottom-right duration chips to the You-page preview windows so they match the requirement more closely.
+- Expanded creator routing so more feed authors open real channel pages instead of falling through to placeholders.
+- Wired the overflow menus to real in-memory state changes for history removal and watch-later / playlist updates.
+- Removed the live-tab Iran breaking-news card and replaced the remaining SpaceX / LCK entries with screenshot-backed live pages using `app/src/main/assets/data/live/spacex_launch.png` and `app/src/main/assets/data/live/lck_spring_2026.png`.
+- Adjusted search so the results list stays empty before the user enters a query.
+- Reduced the top whitespace on `History`, `Watch later`, and `Liked videos`, and made dismissing settings subpages return to the main `Settings` screen first.
+- Tightened the top inset spacing again on `History`, `Watch later`, and `Liked videos` to better match the reference density.
+- Moved the status-bar spacing from the whole list to the library top bar itself so those three pages sit even tighter.
+- Removed the `View all` button from the `Playlists` section on the `You` page.
+- Aligned the top spacing of `History`, `Watch later`, and `Liked videos` with the `You` page.
+- Switched the `History` section entry on the `You` page to a title-plus-arrow trigger and stretched `Search watch history` to full width.
+- Matched the `Playlists` section to the same title-plus-arrow pattern and added a dedicated playlists overview screen based on `UIReference/playlists.jpg`.
+- Removed only the `New` card from the `Playlists` row on the `You` page and kept the small `+` action in the header.
+- Removed the duplicate bottom `History` and `Playlists` rows from the `You` page while keeping the upper sections unchanged.

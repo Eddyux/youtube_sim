@@ -7,7 +7,9 @@ import com.example.youtube_sim.model.HistoryPreview
 import com.example.youtube_sim.model.HistorySection
 import com.example.youtube_sim.model.HomeChip
 import com.example.youtube_sim.model.HomeTabContent
+import com.example.youtube_sim.model.ChannelProfile
 import com.example.youtube_sim.model.NotificationSettingsItem
+import com.example.youtube_sim.model.OverflowMenuAction
 import com.example.youtube_sim.model.PlaySettingsMenuItem
 import com.example.youtube_sim.model.PlaylistDetail
 import com.example.youtube_sim.model.PlaylistPreview
@@ -28,11 +30,15 @@ sealed interface OverlayState {
 
     data object Settings : OverlayState
     data object General : OverlayState
-    data object Notifications : OverlayState
+    data object NotificationSettings : OverlayState
+    data object NotificationInbox : OverlayState
     data object Languages : OverlayState
     data object Quality : OverlayState
     data object History : OverlayState
+    data object Playlists : OverlayState
+    data object Search : OverlayState
     data class Playlist(val key: String) : OverlayState
+    data class Channel(val key: String) : OverlayState
     data class VideoPlay(val item: FeedItem) : OverlayState
 }
 
@@ -48,6 +54,9 @@ data class YoutubeUiState(
     val historySections: List<HistorySection> = emptyList(),
     val playlistPreviews: List<PlaylistPreview> = emptyList(),
     val playlistDetails: List<PlaylistDetail> = emptyList(),
+    val historyOverflowActions: List<OverflowMenuAction> = emptyList(),
+    val playlistOverflowActions: List<OverflowMenuAction> = emptyList(),
+    val channelProfiles: List<ChannelProfile> = emptyList(),
     val settingsGroups: List<SettingsGroup> = emptyList(),
     val generalSettings: List<GeneralSettingsItem> = emptyList(),
     val notificationSettings: List<NotificationSettingsItem> = emptyList(),
@@ -60,6 +69,8 @@ data class YoutubeUiState(
     val playSettingsMoreItems: List<PlaySettingsMenuItem> = emptyList(),
     val comments: List<VideoComment> = emptyList(),
     val currentVideoResolutionLabel: String = "360p",
+    val searchQuery: String = "",
+    val subscribedChannels: Set<String> = emptySet(),
     val overlay: OverlayState? = null
 )
 
@@ -70,8 +81,13 @@ interface YoutubePresenterContract {
     fun onHomeChipSelected(key: String)
     fun onHeaderActionSelected(key: String)
     fun onFeedItemSelected(itemId: String)
+    fun onChannelSelected(key: String)
+    fun onChannelSubscriptionToggle(key: String)
+    fun onHistoryOverflowAction(itemId: String, actionKey: String)
+    fun onPlaylistOverflowAction(playlistKey: String, itemId: String, actionKey: String)
     fun onYouEntrySelected(key: String)
     fun onSettingsItemSelected(label: String)
+    fun onSearchQueryChanged(query: String)
     fun showPlaceholder(title: String, description: String)
     fun onToggle(key: String)
     fun onSelectionChanged(groupKey: String, optionKey: String)
