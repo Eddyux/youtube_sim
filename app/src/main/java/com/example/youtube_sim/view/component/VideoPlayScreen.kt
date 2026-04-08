@@ -24,10 +24,15 @@ fun VideoPlayScreen(
     playSettingsMoreItems: List<PlaySettingsMenuItem>,
     currentVideoQualityOptions: List<QualityOption>,
     currentVideoResolutionLabel: String,
+    isVideoLiked: Boolean,
+    isVideoSaved: Boolean,
     isCreatorSubscribed: Boolean,
     onToggle: (String) -> Unit,
     onSelectionChanged: (String, String) -> Unit,
     onFeedItemSelected: (String) -> Unit,
+    onVideoLikeToggle: (String) -> Unit,
+    onVideoSaveToggle: (String) -> Unit,
+    onCommentSubmitted: (String, String) -> Unit,
     onChannelSelected: (String) -> Unit,
     onSubscriptionToggle: () -> Unit,
     onOpenGlobalQuality: () -> Unit,
@@ -44,8 +49,12 @@ fun VideoPlayScreen(
             item = item,
             relatedItems = relatedItems,
             comments = comments,
+            isVideoLiked = isVideoLiked,
+            isVideoSaved = isVideoSaved,
             isCreatorSubscribed = isCreatorSubscribed,
             onFeedItemSelected = onFeedItemSelected,
+            onVideoLikeToggle = onVideoLikeToggle,
+            onVideoSaveToggle = onVideoSaveToggle,
             onChannelSelected = onChannelSelected,
             onSubscriptionToggle = onSubscriptionToggle,
             onBack = onBack,
@@ -108,7 +117,11 @@ fun VideoPlayScreen(
         }
 
         if (showComments) {
-            CommentsSheet(comments = comments, onDismiss = { showComments = false })
+            CommentsSheet(
+                comments = comments,
+                onSendComment = { text -> onCommentSubmitted(item.id, text) },
+                onDismiss = { showComments = false }
+            )
         }
     }
 }

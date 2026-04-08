@@ -68,6 +68,7 @@ data class YoutubeUiState(
     val playSettingsItems: List<PlaySettingsMenuItem> = emptyList(),
     val playSettingsMoreItems: List<PlaySettingsMenuItem> = emptyList(),
     val comments: List<VideoComment> = emptyList(),
+    val commentsByVideoId: Map<String, List<VideoComment>> = emptyMap(),
     val currentVideoResolutionLabel: String = "360p",
     val searchQuery: String = "",
     val subscribedChannels: Set<String> = emptySet(),
@@ -91,5 +92,8 @@ interface YoutubePresenterContract {
     fun showPlaceholder(title: String, description: String)
     fun onToggle(key: String)
     fun onSelectionChanged(groupKey: String, optionKey: String)
+    fun onVideoLikeToggle(itemId: String)
+    fun onVideoSaveToggle(itemId: String)
+    fun onCommentSubmitted(itemId: String, text: String)
     fun dismissOverlay()
 }

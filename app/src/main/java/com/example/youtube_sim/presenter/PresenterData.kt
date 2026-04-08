@@ -241,7 +241,7 @@ private fun preferredFeaturedItem(key: String, videos: List<FeedItem>): FeedItem
 
 private fun subscriberLabelFor(key: String): String {
     return when (key) {
-        "jay_chou" -> "7.2M subscribers"
+        "jay_chou" -> "3.36M subscribers"
         "apple" -> "18.4M subscribers"
         "apple_design" -> "1.8M subscribers"
         "apple_support" -> "1.3M subscribers"

@@ -42,8 +42,12 @@ fun VideoPlayContent(
     item: FeedItem,
     relatedItems: List<FeedItem>,
     comments: List<VideoComment>,
+    isVideoLiked: Boolean,
+    isVideoSaved: Boolean,
     isCreatorSubscribed: Boolean,
     onFeedItemSelected: (String) -> Unit,
+    onVideoLikeToggle: (String) -> Unit,
+    onVideoSaveToggle: (String) -> Unit,
     onChannelSelected: (String) -> Unit,
     onSubscriptionToggle: () -> Unit,
     onBack: () -> Unit,
@@ -60,7 +64,15 @@ fun VideoPlayContent(
                 onSubscriptionToggle = onSubscriptionToggle
             )
         }
-        item { ActionButtonsRow() }
+        item {
+            ActionButtonsRow(
+                itemId = item.id,
+                isVideoLiked = isVideoLiked,
+                isVideoSaved = isVideoSaved,
+                onVideoLikeToggle = onVideoLikeToggle,
+                onVideoSaveToggle = onVideoSaveToggle
+            )
+        }
         item { CommentsPreview(comments = comments, onClick = onCommentsClick) }
         items(relatedItems, key = FeedItem::id) { related ->
             RelatedVideoRow(item = related, onClick = { onFeedItemSelected(related.id) })
@@ -190,15 +202,32 @@ private fun VideoInfoSection(
 }
 
 @Composable
-private fun ActionButtonsRow() {
+private fun ActionButtonsRow(
+    itemId: String,
+    isVideoLiked: Boolean,
+    isVideoSaved: Boolean,
+    onVideoLikeToggle: (String) -> Unit,
+    onVideoSaveToggle: (String) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        ActionButton(LikeIcon, "Like", "53")
-        ActionButton(DislikeIcon, "Dislike")
-        ActionButton(ShareIcon, "Share")
-        ActionButton(SaveIcon, "Save")
+        ActionButton(
+            icon = LikeIcon,
+            label = if (isVideoLiked) "Liked" else "Like",
+            trailingText = "53",
+            selected = isVideoLiked,
+            onClick = { onVideoLikeToggle(itemId) }
+        )
+        ActionButton(icon = DislikeIcon, label = "Dislike")
+        ActionButton(icon = ShareIcon, label = "Share")
+        ActionButton(
+            icon = SaveIcon,
+            label = if (isVideoSaved) "Saved" else "Save",
+            selected = isVideoSaved,
+            onClick = { onVideoSaveToggle(itemId) }
+        )
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
@@ -207,15 +236,26 @@ private fun ActionButtonsRow() {
 private fun ActionButton(
     icon: ImageVector,
     label: String,
-    trailingText: String = ""
+    trailingText: String = "",
+    selected: Boolean = false,
+    onClick: (() -> Unit)? = null
 ) {
-    Surface(shape = RoundedCornerShape(20.dp), color = Color(0xFFF1F1F1)) {
+    Surface(
+        modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier,
+        shape = RoundedCornerShape(20.dp),
+        color = if (selected) Color.Black else Color(0xFFF1F1F1)
+    ) {
         Row(modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = label, modifier = Modifier.size(18.dp))
+            val contentColor = if (selected) Color.White else Color.Black
+            Icon(imageVector = icon, contentDescription = label, modifier = Modifier.size(18.dp), tint = contentColor)
             if (trailingText.isNotEmpty()) {
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(text = trailingText, style = MaterialTheme.typography.labelMedium)
+                Text(text = trailingText, style = MaterialTheme.typography.labelMedium, color = contentColor)
             }
+            if (trailingText.isEmpty()) {
+                Spacer(modifier = Modifier.width(6.dp))
+            }
+            Text(text = label, style = MaterialTheme.typography.labelMedium, color = contentColor)
         }
     }
 }

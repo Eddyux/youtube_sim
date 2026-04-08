@@ -200,10 +200,17 @@ fun YoutubeApp(
         }
 
         is OverlayState.VideoPlay -> {
-            val relatedItems = state.homeTabs
+            val standardRelatedItems = state.homeTabs
                 .filter { it.key != "shorts" }
                 .flatMap { it.items }
                 .filter { it.id != overlay.item.id }
+            val shortBonus = shortsItems.firstOrNull()
+            val relatedItems = buildList {
+                addAll(standardRelatedItems)
+                if (shortBonus != null) {
+                    add(shortBonus)
+                }
+            }
             val creatorProfileKey = state.channelProfiles.firstOrNull { profile ->
                 profile.key == normalizeChannelKey(overlay.item.creator) ||
                     overlay.item.id.contains(profile.key.replace('_', '-'), ignoreCase = true)
@@ -211,17 +218,22 @@ fun YoutubeApp(
             VideoPlayScreen(
                 item = overlay.item,
                 relatedItems = relatedItems,
-                comments = state.comments,
+                comments = state.commentsByVideoId[overlay.item.id] ?: state.comments,
                 toggleStates = state.toggleStates,
                 selectedOptions = state.selectedOptions,
                 playSettingsItems = state.playSettingsItems,
                 playSettingsMoreItems = state.playSettingsMoreItems,
                 currentVideoQualityOptions = state.currentVideoQualityOptions,
                 currentVideoResolutionLabel = state.currentVideoResolutionLabel,
+                isVideoLiked = overlay.item.id in state.playlistDetails.firstOrNull { it.key == "liked_videos" }?.itemIds.orEmpty(),
+                isVideoSaved = overlay.item.id in state.playlistDetails.firstOrNull { it.key == "watch_later" }?.itemIds.orEmpty(),
                 isCreatorSubscribed = creatorProfileKey != null && creatorProfileKey in state.subscribedChannels,
                 onToggle = presenter::onToggle,
                 onSelectionChanged = presenter::onSelectionChanged,
                 onFeedItemSelected = presenter::onFeedItemSelected,
+                onVideoLikeToggle = presenter::onVideoLikeToggle,
+                onVideoSaveToggle = presenter::onVideoSaveToggle,
+                onCommentSubmitted = presenter::onCommentSubmitted,
                 onChannelSelected = presenter::onChannelSelected,
                 onSubscriptionToggle = {
                     if (creatorProfileKey != null) {

@@ -227,7 +227,7 @@ internal val defaultToggles = mapOf(
     "stats_for_nerds" to false,
     "earn_badges" to true,
     "scheduled_digest" to false,
-    "subscriptions" to true,
+    "subscriptions" to false,
     "recommended_videos" to true,
     "recommended_create" to true,
     "activity_channel" to true,

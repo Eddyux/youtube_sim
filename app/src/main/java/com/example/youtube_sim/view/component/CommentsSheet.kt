@@ -15,27 +15,37 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.youtube_sim.model.VideoComment
 
 @Composable
 fun CommentsSheet(
     comments: List<VideoComment>,
+    onSendComment: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
+    var draft by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +103,7 @@ fun CommentsSheet(
                         .weight(1f)
                         .padding(horizontal = 20.dp)
                 ) {
-                    items(comments, key = VideoComment::handle) { comment ->
+                    itemsIndexed(comments, key = { index, comment -> "${comment.handle}-$index" }) { _, comment ->
                         CommentRow(comment = comment)
                         Spacer(modifier = Modifier.height(18.dp))
                     }
@@ -120,14 +130,38 @@ fun CommentsSheet(
                             shape = RoundedCornerShape(20.dp),
                             color = Color(0xFF262626)
                         ) {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                                text = "Add a comment...",
-                                color = Color(0xFF9CA3AF)
+                            TextField(
+                                value = draft,
+                                onValueChange = { draft = it },
+                                modifier = Modifier.fillMaxWidth(),
+                                placeholder = { Text(text = "Add a comment...", color = Color(0xFF9CA3AF)) },
+                                singleLine = true,
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color(0xFF262626),
+                                    unfocusedContainerColor = Color(0xFF262626),
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    cursorColor = Color.White,
+                                    focusedTextColor = Color.White,
+                                    unfocusedTextColor = Color.White
+                                )
                             )
                         }
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(imageVector = SendIcon, contentDescription = "Send", tint = Color(0xFF9CA3AF), modifier = Modifier.size(20.dp))
+                        Icon(
+                            imageVector = SendIcon,
+                            contentDescription = "Send",
+                            tint = if (draft.trim().isBlank()) Color(0xFF9CA3AF) else Color(0xFF93C5FD),
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    val text = draft.trim()
+                                    if (text.isNotBlank()) {
+                                        onSendComment(text)
+                                        draft = ""
+                                    }
+                                }
+                        )
                     }
                 }
             }

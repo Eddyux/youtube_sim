@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.remember
 import com.example.youtube_sim.data.AssetHomeFeedRepository
+import com.example.youtube_sim.data.TaskStateStore
 import com.example.youtube_sim.presenter.YoutubePresenter
 import com.example.youtube_sim.ui.theme.YoutubeSimTheme
 import com.example.youtube_sim.view.YoutubeApp
@@ -15,7 +16,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val presenter = remember { YoutubePresenter(AssetHomeFeedRepository(applicationContext)) }
+            val presenter = remember {
+                YoutubePresenter(
+                    repository = AssetHomeFeedRepository(applicationContext),
+                    taskStateStore = TaskStateStore(applicationContext)
+                )
+            }
             YoutubeSimTheme {
                 YoutubeApp(presenter = presenter)
             }
