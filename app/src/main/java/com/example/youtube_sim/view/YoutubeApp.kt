@@ -13,6 +13,7 @@ import com.example.youtube_sim.view.component.ChannelScreen
 import com.example.youtube_sim.view.component.GeneralScreen
 import com.example.youtube_sim.view.component.HistoryScreen
 import com.example.youtube_sim.view.component.HomeScreen
+import com.example.youtube_sim.view.component.AboutScreen
 import com.example.youtube_sim.view.component.LanguageSettingsScreen
 import com.example.youtube_sim.view.component.NotificationInboxScreen
 import com.example.youtube_sim.view.component.NotificationsScreen
@@ -106,6 +107,13 @@ fun YoutubeApp(
                 sections = state.qualityPreferenceSections,
                 selectedOptions = state.selectedOptions,
                 onOptionSelected = presenter::onSelectionChanged,
+                onBack = { presenter.onSettingsItemSelected("__back_to_settings__") }
+            )
+            return
+        }
+
+        OverlayState.About -> {
+            AboutScreen(
                 onBack = { presenter.onSettingsItemSelected("__back_to_settings__") }
             )
             return

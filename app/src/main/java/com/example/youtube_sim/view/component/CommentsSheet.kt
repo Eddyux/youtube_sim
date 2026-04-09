@@ -45,6 +45,8 @@ fun CommentsSheet(
     onDismiss: () -> Unit
 ) {
     var draft by remember { mutableStateOf("") }
+    var sortMode by remember { mutableStateOf(CommentSortMode.TOP) }
+    val visibleComments = remember(comments, sortMode) { comments.sortedFor(sortMode) }
 
     Box(
         modifier = Modifier
@@ -94,8 +96,16 @@ fun CommentsSheet(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    CommentChip(label = "Top", selected = true)
-                    CommentChip(label = "Newest", selected = false)
+                    CommentChip(
+                        label = "Top",
+                        selected = sortMode == CommentSortMode.TOP,
+                        onClick = { sortMode = CommentSortMode.TOP }
+                    )
+                    CommentChip(
+                        label = "Newest",
+                        selected = sortMode == CommentSortMode.NEWEST,
+                        onClick = { sortMode = CommentSortMode.NEWEST }
+                    )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 LazyColumn(
@@ -103,7 +113,7 @@ fun CommentsSheet(
                         .weight(1f)
                         .padding(horizontal = 20.dp)
                 ) {
-                    itemsIndexed(comments, key = { index, comment -> "${comment.handle}-$index" }) { _, comment ->
+                    itemsIndexed(visibleComments, key = { index, comment -> "${comment.handle}-${comment.timeAgo}-$index" }) { _, comment ->
                         CommentRow(comment = comment)
                         Spacer(modifier = Modifier.height(18.dp))
                     }
@@ -170,8 +180,9 @@ fun CommentsSheet(
 }
 
 @Composable
-private fun CommentChip(label: String, selected: Boolean) {
+private fun CommentChip(label: String, selected: Boolean, onClick: () -> Unit) {
     Surface(
+        modifier = Modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         color = if (selected) Color.White else Color(0xFF262626)
     ) {
@@ -217,5 +228,31 @@ private fun CommentRow(comment: VideoComment) {
                 Text(text = it, color = Color(0xFF93C5FD), style = MaterialTheme.typography.bodySmall)
             }
         }
+    }
+}
+
+private enum class CommentSortMode {
+    TOP,
+    NEWEST
+}
+
+private fun List<VideoComment>.sortedFor(sortMode: CommentSortMode): List<VideoComment> {
+    return when (sortMode) {
+        CommentSortMode.TOP -> this
+        CommentSortMode.NEWEST -> sortedBy(VideoComment::relativeMinutes)
+    }
+}
+
+private fun VideoComment.relativeMinutes(): Int {
+    val text = timeAgo.trim().lowercase()
+    return when {
+        text == "just now" -> 0
+        "minute" in text -> text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE
+        "hour" in text -> (text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE / 60) * 60
+        "day" in text -> (text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE / 1440) * 1440
+        "week" in text -> (text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE / 10080) * 10080
+        "month" in text -> (text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE / 43200) * 43200
+        "year" in text -> (text.takeWhile(Char::isDigit).toIntOrNull() ?: Int.MAX_VALUE / 525600) * 525600
+        else -> Int.MAX_VALUE
     }
 }

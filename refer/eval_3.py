@@ -1,41 +1,40 @@
-import subprocess
 import json
 import os
+import subprocess
 
 
-PACKAGE_NAME = "com.example.ubereats_sim"
+PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
-ACTION_VALUE = "save_place"
-PAGE_VALUE = "settings_home_set"
+TARGET_ITEM_ID = "all-build-itx-too-late"
 
 
 def validate_task_three(result=None, device_id=None, backup_dir=None):
     message_file_path = os.path.join(backup_dir, "messages.json") if backup_dir else "messages.json"
 
-    cmd = ['adb']
+    cmd = ["adb"]
     if device_id:
         cmd.extend(["-s", device_id])
     cmd.extend(["exec-out", "run-as", PACKAGE_NAME, "cat", DEVICE_FILE_PATH])
-    subprocess.run(cmd, stdout=open(message_file_path, "w"))
+    subprocess.run(cmd, stdout=open(message_file_path, "w", encoding="utf-8"), stderr=subprocess.DEVNULL, check=False)
 
     try:
         with open(message_file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
             events = data if isinstance(data, list) else [data]
-    except:
+    except Exception:
         return False
 
-    for event in reversed(events):
-        if event.get("action") != ACTION_VALUE:
-            continue
-        if event.get("page") != PAGE_VALUE:
-            continue
+    has_search = False
+    has_like = False
 
+    for event in reversed(events):
         extra_data = event.get("extra_data", {})
-        location = str(extra_data.get("location", "")).strip().lower()
-        if extra_data.get("building_type") == "House" and location == "jianghanlu":
-            return True
-    return False
+        if event.get("action") == "search_query" and extra_data.get("query") == "itx":
+            has_search = True
+        if event.get("action") == "toggle_video_like" and extra_data.get("item_id") == TARGET_ITEM_ID and extra_data.get("enabled") == "true":
+            has_like = True
+
+    return has_search and has_like
 
 
 if __name__ == "__main__":

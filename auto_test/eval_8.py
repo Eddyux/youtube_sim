@@ -1,27 +1,28 @@
-import json
-import os
-import subprocess
+from appsim.utils import read_json_from_device
 
-
-TARGET_TEXT = '这首歌太动听了'
+PACKAGE_NAME = "com.example.youtube_sim"
+DEVICE_FILE_PATH = "files/messages.json"
+TARGET_TEXT = "\u8fd9\u9996\u6b4c\u592a\u52a8\u542c\u4e86"
+TARGET_ITEM_ID = "music-blue-porcelain"
 
 
 def validate_task_eight(result=None, device_id=None, backup_dir=None):
-    state_path = os.path.join(backup_dir, 'task_state.json') if backup_dir else 'task_state.json'
-    cmd = ['adb']
-    if device_id:
-        cmd.extend(['-s', device_id])
-    cmd.extend(['exec-out', 'run-as', 'com.example.youtube_sim', 'cat', 'files/task_state.json'])
-    subprocess.run(cmd, stdout=open(state_path, 'w', encoding='utf-8'), stderr=subprocess.DEVNULL, check=False)
-
     try:
-        state = json.load(open(state_path, 'r', encoding='utf-8'))
+        all_data = read_json_from_device(device_id, PACKAGE_NAME, DEVICE_FILE_PATH, backup_dir)
+        events = all_data if isinstance(all_data, list) else [all_data]
     except Exception:
         return False
 
-    comments = ((state.get('posted_comments') or {}).get('music-blue-porcelain') or [])
-    return TARGET_TEXT in comments
+    for event in reversed(events):
+        extra_data = event.get("extra_data", {})
+        if event.get("action") != "submit_comment":
+            continue
+        if event.get("page") != "comments_sheet":
+            continue
+        if extra_data.get("item_id") == TARGET_ITEM_ID and extra_data.get("text") == TARGET_TEXT:
+            return True
+    return False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(validate_task_eight())

@@ -34,6 +34,7 @@ sealed interface OverlayState {
     data object NotificationInbox : OverlayState
     data object Languages : OverlayState
     data object Quality : OverlayState
+    data object About : OverlayState
     data object History : OverlayState
     data object Playlists : OverlayState
     data object Search : OverlayState

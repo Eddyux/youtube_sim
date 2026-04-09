@@ -10,6 +10,13 @@ data class InteractionEvent(
     val timestamp: Long = System.currentTimeMillis()
 )
 
+data class EvaluatorMessage(
+    val action: String,
+    val page: String,
+    val extraData: Map<String, String> = emptyMap(),
+    val timestamp: Long = System.currentTimeMillis()
+)
+
 data class InteractionSnapshot(
     val currentRootTab: String,
     val selectedHomeChipKey: String,
@@ -52,6 +59,15 @@ fun InteractionSnapshot.toJson(): JSONObject {
                 )
             }
         })
+    }
+}
+
+fun EvaluatorMessage.toJson(): JSONObject {
+    return JSONObject().apply {
+        put("action", action)
+        put("page", page)
+        put("extra_data", JSONObject(extraData))
+        put("timestamp", timestamp)
     }
 }
 

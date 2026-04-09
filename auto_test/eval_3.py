@@ -1,45 +1,29 @@
-import json
-import os
-import subprocess
+from appsim.utils import read_json_from_device
+
+PACKAGE_NAME = "com.example.youtube_sim"
+DEVICE_FILE_PATH = "files/messages.json"
+TARGET_ITEM_ID = "all-build-itx-too-late"
 
 
 def validate_task_three(result=None, device_id=None, backup_dir=None):
-    state_path = os.path.join(backup_dir, 'task_state.json') if backup_dir else 'task_state.json'
-    cmd = ['adb']
-    if device_id:
-        cmd.extend(['-s', device_id])
-    cmd.extend(['exec-out', 'run-as', 'com.example.youtube_sim', 'cat', 'files/task_state.json'])
-    subprocess.run(cmd, stdout=open(state_path, 'w', encoding='utf-8'), stderr=subprocess.DEVNULL, check=False)
-
     try:
-        state = json.load(open(state_path, 'r', encoding='utf-8'))
-        feed = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'app', 'src', 'main', 'assets', 'data', 'home_feed.json'), 'r', encoding='utf-8'))
+        all_data = read_json_from_device(device_id, PACKAGE_NAME, DEVICE_FILE_PATH, backup_dir)
+        events = all_data if isinstance(all_data, list) else [all_data]
     except Exception:
         return False
 
-    first_id = None
-    for tab in feed.get('tabs', []):
-        if tab.get('key') == 'live':
-            continue
-        for item in tab.get('items', []):
-            if 'itx' in item.get('title', '').lower() or 'itx' in item.get('creator', '').lower():
-                first_id = item.get('id')
-                break
-        if first_id:
-            break
+    has_search = False
+    has_like = False
 
-    if not first_id:
-        return False
+    for event in reversed(events):
+        extra_data = event.get("extra_data", {})
+        if event.get("action") == "search_query" and extra_data.get("query") == "itx":
+            has_search = True
+        if event.get("action") == "toggle_video_like" and extra_data.get("item_id") == TARGET_ITEM_ID and extra_data.get("enabled") == "true":
+            has_like = True
 
-    searched = state.get('search_query', '').strip().lower() == 'itx'
-    if not searched:
-        for event in reversed(state.get('events', [])):
-            if event.get('action') == 'search_query_changed' and (event.get('details') or {}).get('query') == 'itx':
-                searched = True
-                break
-
-    return searched and first_id in (state.get('liked_video_ids') or [])
+    return has_search and has_like
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(validate_task_three())

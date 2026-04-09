@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.youtube_sim.data.HomeFeedRepository
 import com.example.youtube_sim.data.TaskStateStore
+import com.example.youtube_sim.model.EvaluatorMessage
 import com.example.youtube_sim.model.FeedItem
 import com.example.youtube_sim.model.InteractionEvent
 import com.example.youtube_sim.model.InteractionSnapshot
@@ -91,9 +92,15 @@ class YoutubePresenter(
     override fun onFeedItemSelected(itemId: String) {
         val item = uiState.homeTabs.flatMap { it.items }.firstOrNull { it.id == itemId }
         if (item != null) {
+            val sourcePage = currentPageKey()
             lastPlayedVideoId = itemId
             uiState = uiState.copy(overlay = OverlayState.VideoPlay(item = item))
             recordEvent("play_video", itemId)
+            logEvaluatorMessage(
+                action = "play_video",
+                page = sourcePage,
+                extraData = mapOf("item_id" to itemId)
+            )
         } else {
             showPlaceholder("In development", "The destination for '$itemId' is not implemented yet.")
         }
@@ -118,6 +125,13 @@ class YoutubePresenter(
         }
         uiState = uiState.copy(subscribedChannels = subscriptions)
         recordEvent("toggle_channel_subscription", key, mapOf("enabled" to subscribed.toString()))
+        logEvaluatorMessage(
+            action = "toggle_channel_subscription",
+            extraData = mapOf(
+                "channel_key" to key,
+                "enabled" to subscribed.toString()
+            )
+        )
     }
 
     override fun onHistoryOverflowAction(itemId: String, actionKey: String) {
@@ -167,6 +181,7 @@ class YoutubePresenter(
             "Notifications" -> openOverlay(OverlayState.NotificationSettings, "notification_settings")
             "Languages" -> openOverlay(OverlayState.Languages, "language_settings")
             "Quality" -> openOverlay(OverlayState.Quality, "quality_settings")
+            "About" -> openOverlay(OverlayState.About, "about")
             else -> showPlaceholder(label, "$label is kept as a placeholder entry.")
         }
     }
@@ -176,6 +191,13 @@ class YoutubePresenter(
         val normalized = query.trim()
         val details = if (normalized.isBlank()) emptyMap() else mapOf("query" to normalized)
         recordEvent("search_query_changed", normalized.ifBlank { "blank" }, details)
+        if (normalized.isNotBlank()) {
+            logEvaluatorMessage(
+                action = "search_query",
+                page = "search",
+                extraData = mapOf("query" to normalized.lowercase())
+            )
+        }
     }
 
     override fun showPlaceholder(title: String, description: String) {
@@ -188,6 +210,13 @@ class YoutubePresenter(
         val updated = !current
         uiState = uiState.copy(toggleStates = uiState.toggleStates + (key to updated))
         recordEvent("toggle_setting", key, mapOf("enabled" to updated.toString()))
+        logEvaluatorMessage(
+            action = "toggle_setting",
+            extraData = mapOf(
+                "key" to key,
+                "enabled" to updated.toString()
+            )
+        )
     }
 
     override fun onSelectionChanged(groupKey: String, optionKey: String) {
@@ -208,11 +237,25 @@ class YoutubePresenter(
     override fun onVideoLikeToggle(itemId: String) {
         val enabled = togglePlaylistMembership("liked_videos", itemId)
         recordEvent("toggle_video_like", itemId, mapOf("enabled" to enabled.toString()))
+        logEvaluatorMessage(
+            action = "toggle_video_like",
+            extraData = mapOf(
+                "item_id" to itemId,
+                "enabled" to enabled.toString()
+            )
+        )
     }
 
     override fun onVideoSaveToggle(itemId: String) {
         val enabled = togglePlaylistMembership("watch_later", itemId)
         recordEvent("toggle_video_save", itemId, mapOf("enabled" to enabled.toString()))
+        logEvaluatorMessage(
+            action = "toggle_video_save",
+            extraData = mapOf(
+                "item_id" to itemId,
+                "enabled" to enabled.toString()
+            )
+        )
     }
 
     override fun onCommentSubmitted(itemId: String, text: String) {
@@ -229,6 +272,14 @@ class YoutubePresenter(
         uiState = uiState.copy(commentsByVideoId = uiState.commentsByVideoId + (itemId to (listOf(newComment) + currentComments)))
         postedComments.getOrPut(itemId) { mutableListOf() }.add(trimmed)
         recordEvent("submit_comment", itemId, mapOf("text" to trimmed))
+        logEvaluatorMessage(
+            action = "submit_comment",
+            page = "comments_sheet",
+            extraData = mapOf(
+                "item_id" to itemId,
+                "text" to trimmed
+            )
+        )
     }
 
     override fun dismissOverlay() {
@@ -236,7 +287,8 @@ class YoutubePresenter(
             OverlayState.General,
             OverlayState.NotificationSettings,
             OverlayState.Languages,
-            OverlayState.Quality -> OverlayState.Settings
+            OverlayState.Quality,
+            OverlayState.About -> OverlayState.Settings
             else -> null
         }
         uiState = uiState.copy(overlay = fallbackOverlay)
@@ -246,6 +298,10 @@ class YoutubePresenter(
     private fun openOverlay(overlay: OverlayState, target: String) {
         uiState = uiState.copy(overlay = overlay)
         recordEvent("open_overlay", target)
+        logEvaluatorMessage(
+            action = "open_page",
+            page = overlayKey(overlay) ?: target
+        )
     }
 
     private fun commentsFor(itemId: String): List<VideoComment> {
@@ -286,6 +342,14 @@ class YoutubePresenter(
         }
         applyPlaylistDetails(updated)
         recordEvent("remove_playlist_item", itemId, mapOf("playlist" to playlistKey))
+        logEvaluatorMessage(
+            action = "remove_playlist_item",
+            page = "playlist:$playlistKey",
+            extraData = mapOf(
+                "playlist_key" to playlistKey,
+                "item_id" to itemId
+            )
+        )
     }
 
     private fun togglePlaylistMembership(playlistKey: String, itemId: String): Boolean {
@@ -316,6 +380,20 @@ class YoutubePresenter(
         persistState()
     }
 
+    private fun logEvaluatorMessage(
+        action: String,
+        page: String = currentPageKey(),
+        extraData: Map<String, String> = emptyMap()
+    ) {
+        taskStateStore.appendMessage(
+            EvaluatorMessage(
+                action = action,
+                page = page,
+                extraData = extraData
+            )
+        )
+    }
+
     private fun persistState(reset: Boolean = false) {
         val snapshot = InteractionSnapshot(
             currentRootTab = uiState.currentRootTab.name.lowercase(),
@@ -343,6 +421,10 @@ class YoutubePresenter(
         return uiState.playlistDetails.firstOrNull { it.key == key }?.itemIds.orEmpty()
     }
 
+    private fun currentPageKey(): String {
+        return overlayKey(uiState.overlay) ?: uiState.currentRootTab.name.lowercase()
+    }
+
     private fun overlayKey(overlay: OverlayState?): String? {
         return when (overlay) {
             null -> null
@@ -353,6 +435,7 @@ class YoutubePresenter(
             OverlayState.NotificationInbox -> "notification_inbox"
             OverlayState.Languages -> "languages"
             OverlayState.Quality -> "quality"
+            OverlayState.About -> "about"
             OverlayState.History -> "history"
             OverlayState.Playlists -> "playlists"
             OverlayState.Search -> "search"
