@@ -1,0 +1,128 @@
+{
+  "current_root_tab": "home",
+  "selected_home_chip_key": "music",
+  "active_overlay": "video_play:music-taylor-ophelia",
+  "search_query": "",
+  "toggle_states": {
+    "rotate_shorts": false,
+    "restricted_mode": false,
+    "stats_for_nerds": false,
+    "earn_badges": true,
+    "scheduled_digest": false,
+    "subscriptions": false,
+    "recommended_videos": true,
+    "recommended_create": true,
+    "activity_channel": true,
+    "activity_comments": true,
+    "mentions": true,
+    "reused_content": true,
+    "product_updates": true,
+    "promotional_content": true,
+    "watch_on_tv": true,
+    "disable_sounds": false,
+    "new_badges": true,
+    "loop_video": false,
+    "ambient_mode": true,
+    "stable_volume": false
+  },
+  "selected_options": {
+    "app_language": "english_china",
+    "quality_mobile": "auto",
+    "quality_wifi": "auto",
+    "quality_audio": "normal",
+    "quality_current_video": "auto"
+  },
+  "subscribed_channels": [],
+  "liked_video_ids": [
+    "music-taylor-ophelia",
+    "shorts-unboxing-mac-desktop",
+    "music-jay-chou-i-do"
+  ],
+  "saved_video_ids": [
+    "music-taylor-ophelia",
+    "all-build-itx-too-late",
+    "apple-esim-travel",
+    "all-screenshot-to-code"
+  ],
+  "playlist_items": {
+    "liked_videos": [
+      "music-taylor-ophelia",
+      "shorts-unboxing-mac-desktop",
+      "music-jay-chou-i-do"
+    ],
+    "watch_later": [
+      "music-taylor-ophelia",
+      "all-build-itx-too-late",
+      "apple-esim-travel",
+      "all-screenshot-to-code"
+    ]
+  },
+  "posted_comments": {
+    "music-taylor-ophelia": [
+      "虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"
+    ]
+  },
+  "last_played_video_id": "music-taylor-ophelia",
+  "events": [
+    {
+      "action": "play_video",
+      "target": "music-jay-chou-nocturne",
+      "details": {},
+      "timestamp": 1776004462357
+    },
+    {
+      "action": "play_video",
+      "target": "music-taylor-ophelia",
+      "details": {},
+      "timestamp": 1776004469637
+    },
+    {
+      "action": "submit_comment",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "text": "虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"
+      },
+      "timestamp": 1776004477299
+    },
+    {
+      "action": "toggle_video_save",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "enabled": "true"
+      },
+      "timestamp": 1776004485094
+    },
+    {
+      "action": "toggle_video_save",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "enabled": "false"
+      },
+      "timestamp": 1776004513944
+    },
+    {
+      "action": "toggle_video_save",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "enabled": "true"
+      },
+      "timestamp": 1776004514259
+    },
+    {
+      "action": "toggle_video_like",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "enabled": "false"
+      },
+      "timestamp": 1776004514960
+    },
+    {
+      "action": "toggle_video_like",
+      "target": "music-taylor-ophelia",
+      "details": {
+        "enabled": "true"
+      },
+      "timestamp": 1776004515430
+    }
+  ]
+}

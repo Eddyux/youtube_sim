@@ -1,42 +1,72 @@
 [
   {
-    "action": "search_query",
-    "page": "search",
+    "action": "play_video",
+    "page": "home",
     "extra_data": {
-      "query": "周杰伦的青花瓷"
+      "item_id": "music-jay-chou-nocturne"
     },
-    "timestamp": 1775997946309
-  },
-  {
-    "action": "search_query",
-    "page": "search",
-    "extra_data": {
-      "query": "t"
-    },
-    "timestamp": 1775998004622
-  },
-  {
-    "action": "search_query",
-    "page": "search",
-    "extra_data": {
-      "query": "ta"
-    },
-    "timestamp": 1775998006675
-  },
-  {
-    "action": "search_query",
-    "page": "search",
-    "extra_data": {
-      "query": "ta"
-    },
-    "timestamp": 1775998143671
+    "timestamp": 1776004462358
   },
   {
     "action": "play_video",
-    "page": "search",
+    "page": "home",
     "extra_data": {
       "item_id": "music-taylor-ophelia"
     },
-    "timestamp": 1775998144540
+    "timestamp": 1776004469638
+  },
+  {
+    "action": "submit_comment",
+    "page": "comments_sheet",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "text": "虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"
+    },
+    "timestamp": 1776004477300
+  },
+  {
+    "action": "toggle_video_save",
+    "page": "video_play:music-taylor-ophelia",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "enabled": "true"
+    },
+    "timestamp": 1776004485095
+  },
+  {
+    "action": "toggle_video_save",
+    "page": "video_play:music-taylor-ophelia",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "enabled": "false"
+    },
+    "timestamp": 1776004513945
+  },
+  {
+    "action": "toggle_video_save",
+    "page": "video_play:music-taylor-ophelia",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "enabled": "true"
+    },
+    "timestamp": 1776004514259
+  },
+  {
+    "action": "toggle_video_like",
+    "page": "video_play:music-taylor-ophelia",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "enabled": "false"
+    },
+    "timestamp": 1776004514961
+  },
+  {
+    "action": "toggle_video_like",
+    "page": "video_play:music-taylor-ophelia",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia",
+      "enabled": "true"
+    },
+    "timestamp": 1776004515431
   }
 ]

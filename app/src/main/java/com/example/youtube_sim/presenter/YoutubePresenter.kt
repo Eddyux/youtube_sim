@@ -4,7 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.youtube_sim.data.HomeFeedRepository
-import com.example.youtube_sim.data.TaskStateStore
+import com.example.youtube_sim.data.PersistedUiPreferences
+import com.example.youtube_sim.data.TaskStateStoreDataSource
 import com.example.youtube_sim.model.EvaluatorMessage
 import com.example.youtube_sim.model.FeedItem
 import com.example.youtube_sim.model.InteractionEvent
@@ -14,11 +15,14 @@ import com.example.youtube_sim.model.VideoComment
 
 class YoutubePresenter(
     repository: HomeFeedRepository,
-    private val taskStateStore: TaskStateStore
+    private val taskStateStore: TaskStateStoreDataSource
 ) : YoutubePresenterContract {
     private val initialTabs = repository.loadTabs()
     private val initialPlaylistDetails = refreshPlaylistDetails(playlistDetails)
-    private val initialCurrentVideoSelection = defaultSelections.getValue("quality_current_video")
+    private val persistedPreferences = taskStateStore.loadUiPreferences()
+    private val initialToggleStates = mergeToggleStates(persistedPreferences)
+    private val initialSelectedOptions = mergeSelectedOptions(persistedPreferences)
+    private val initialCurrentVideoSelection = initialSelectedOptions.getValue("quality_current_video")
     private val initialResolutionLabel = resolutionForCurrentVideo(initialCurrentVideoSelection)
     private val events = mutableListOf<InteractionEvent>()
     private val postedComments = linkedMapOf<String, MutableList<String>>()
@@ -44,8 +48,8 @@ class YoutubePresenter(
             languageOptions = languageOptions,
             qualityPreferenceSections = qualityPreferenceSections,
             currentVideoQualityOptions = currentVideoQualityOptions,
-            toggleStates = defaultToggles,
-            selectedOptions = defaultSelections,
+            toggleStates = initialToggleStates,
+            selectedOptions = initialSelectedOptions,
             playSettingsItems = buildPlaySettingsItems(initialCurrentVideoSelection, initialResolutionLabel),
             playSettingsMoreItems = playSettingsMoreItems,
             comments = comments,
@@ -215,12 +219,14 @@ class YoutubePresenter(
         val updated = !current
         uiState = uiState.copy(toggleStates = uiState.toggleStates + (key to updated))
         recordEvent("toggle_setting", key, mapOf("enabled" to updated.toString()))
+        val extraData = mutableMapOf(
+            "key" to key,
+            "enabled" to updated.toString()
+        )
+        currentVideoId()?.let { extraData["item_id"] = it }
         logEvaluatorMessage(
             action = "toggle_setting",
-            extraData = mapOf(
-                "key" to key,
-                "enabled" to updated.toString()
-            )
+            extraData = extraData
         )
     }
 
@@ -237,6 +243,15 @@ class YoutubePresenter(
             uiState.copy(selectedOptions = updatedSelections)
         }
         persistState()
+        val extraData = mutableMapOf(
+            "group_key" to groupKey,
+            "option_key" to optionKey
+        )
+        currentVideoId()?.let { extraData["item_id"] = it }
+        logEvaluatorMessage(
+            action = "select_option",
+            extraData = extraData
+        )
     }
 
     override fun onVideoLikeToggle(itemId: String) {
@@ -400,6 +415,10 @@ class YoutubePresenter(
     }
 
     private fun persistState(reset: Boolean = false) {
+        taskStateStore.saveUiPreferences(
+            toggleStates = uiState.toggleStates,
+            selectedOptions = uiState.selectedOptions
+        )
         val snapshot = InteractionSnapshot(
             currentRootTab = uiState.currentRootTab.name.lowercase(),
             selectedHomeChipKey = uiState.selectedHomeChipKey,
@@ -426,6 +445,11 @@ class YoutubePresenter(
         return uiState.playlistDetails.firstOrNull { it.key == key }?.itemIds.orEmpty()
     }
 
+    private fun currentVideoId(): String? {
+        val overlay = uiState.overlay as? OverlayState.VideoPlay ?: return null
+        return overlay.item.id
+    }
+
     private fun currentPageKey(): String {
         return overlayKey(uiState.overlay) ?: uiState.currentRootTab.name.lowercase()
     }
@@ -448,5 +472,13 @@ class YoutubePresenter(
             is OverlayState.Channel -> "channel:${overlay.key}"
             is OverlayState.VideoPlay -> "video_play:${overlay.item.id}"
         }
+    }
+
+    private fun mergeToggleStates(preferences: PersistedUiPreferences): Map<String, Boolean> {
+        return defaultToggles + preferences.toggleStates.filterKeys(defaultToggles::containsKey)
+    }
+
+    private fun mergeSelectedOptions(preferences: PersistedUiPreferences): Map<String, String> {
+        return defaultSelections + preferences.selectedOptions.filterKeys(defaultSelections::containsKey)
     }
 }

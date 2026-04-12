@@ -30,6 +30,11 @@ from .eval_27 import validate_task_twenty_seven
 from .eval_28 import validate_task_twenty_eight
 from .eval_29 import validate_task_twenty_nine
 from .eval_30 import validate_task_thirty
+from .eval_31 import validate_task_thirty_one
+from .eval_32 import validate_task_thirty_two
+from .eval_33 import validate_task_thirty_three
+from .eval_34 import validate_task_thirty_four
+from .eval_35 import validate_task_thirty_five
 
 
 YOUTUBE_TASKS = AppTasks(
@@ -214,6 +219,36 @@ YOUTUBE_TASKS = AppTasks(
             verify_func=validate_task_thirty,
             human_steps=4,
             is_reasoning=True,
+        ),
+        TaskItem(
+            instruction="播放周杰伦的夜曲，品质选择Higher picture quality，打开Loop video和Stable volume",
+            verify_func=validate_task_thirty_one,
+            human_steps=12,
+            is_reasoning=False,
+        ),
+        TaskItem(
+            instruction="播放周杰伦的青花瓷，品质选择Higher picture quality，关闭Ambient mode",
+            verify_func=validate_task_thirty_two,
+            human_steps=11,
+            is_reasoning=False,
+        ),
+        TaskItem(
+            instruction="先在quality页面打开Higher picture quality，再播放周杰伦的青花瓷，并评论“这个MV真清晰”",
+            verify_func=validate_task_thirty_three,
+            human_steps=16,
+            is_reasoning=False,
+        ),
+        TaskItem(
+            instruction="给周杰伦的夜曲点赞加收藏并评论“我是周杰伦十年老粉”，再给青花瓷点赞加收藏并评论“这首歌让我想起了那个女孩”",
+            verify_func=validate_task_thirty_four,
+            human_steps=24,
+            is_reasoning=False,
+        ),
+        TaskItem(
+            instruction="给Taylor Swift的The Fate of Ophelia点赞加收藏并评论“虽然你的歌很好听，但是我还是喜欢听周杰伦的歌”",
+            verify_func=validate_task_thirty_five,
+            human_steps=11,
+            is_reasoning=False,
         ),
     ],
 )

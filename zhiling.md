@@ -29,3 +29,8 @@
 28	看一下Video quality on Wi-Fi的选项是什么？	检查是否返回"Auto"或者"Auto(recommended)"		1
 29	首页all下面前六个视频中有几个是关于电脑的？	检查是否返回"3个"或者"三个"		1
 30	当前app版本号多少？	检查是否回答"21.08.265"		1
+31	播放周杰伦的夜曲，品质选择Higher picture quality,打开Loop video和Stable volume	检查是否在视频播放页选择高品质和打开对应选项			
+32	播放周杰伦的青花瓷，品质选择Higher picture quality,关闭Ambient mode	检查是否在该视频播放页选择高品质和关闭对应选项				注意设置的状态，每次重启app要保持一致
+33	先在quality页面打开Higher picture quality，再播放周杰伦的青花瓷，并评论"这个MV真清晰"	检查是否在设置的quality页面打开高品质，是否在青花瓷视频下评论"这个MV真清晰"				注意每次重启app评论都要重置为初始的，不然没法检测
+34	给周杰伦的夜曲点赞加收藏并评论"我是周杰伦十年老粉",再给青花瓷点赞加收藏并评论"这首歌让我想起了那个女孩"				
+35	给Taylor Swift的The Fate of Ophelia点赞加收藏并评论"虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"					

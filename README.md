@@ -12,7 +12,7 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `Notifications` now has both the settings subpage and the empty-state inbox used by the main bell buttons.
 - `Channel` now includes dynamic creator pages for the local-feed authors, with a working `Subscribe` / `Subscribed` toggle.
 - `Video Play` keeps the player, visible seek bar, comments entry, related videos, and playback settings sheets, including the current-video quality menu.
-- `Task logging` now writes a fresh `task_state.json` snapshot plus action-level `messages.json` entries on each launch so evaluation scripts can verify searches, likes, saves, subscriptions, comments, and page visits.
+- `Task logging` now writes a fresh `task_state.json` snapshot plus action-level `messages.json` entries on each launch, and keeps evaluator-relevant UI preferences in `ui_preferences.json` so evaluation scripts can verify searches, likes, saves, subscriptions, comments, page visits, and persisted settings.
 - `Shorts` uses a vertical one-video-at-a-time feed backed by local asset videos.
 
 ## Local video support
@@ -48,7 +48,7 @@ A local-asset YouTube-style Android app built with Jetpack Compose. The UI follo
 - `app/src/main/java/com/example/youtube_sim/view/component/OverflowMenus.kt` - shared history and playlist overflow sheets
 - `app/src/main/java/com/example/youtube_sim/view/component/ShortsScreen.kt` - shorts pager UI
 - `app/src/main/java/com/example/youtube_sim/view/component/YouScreen.kt` - You tab layout and history previews
-- `auto_test/` - self-contained task validators `eval_1.py` through `eval_30.py`
+- `auto_test/` - self-contained task validators `eval_1.py` through `eval_35.py`
 
 ## Build
 
@@ -91,4 +91,5 @@ $env:ANDROID_USER_HOME='C:\\androidproject\\android_template\\.android'
 - Added real like / save toggles, comment submission, and interaction logging so task evaluators can inspect app-side state through `files/task_state.json` and `files/messages.json`.
 - Reset the evaluator-visible state on each fresh launch, while keeping the requested default watch-later item, Jay Chou subscribe baseline, and notifications defaults intact.
 - Adjusted the related-videos list and watch-later duration labels to line up with the new detection tasks.
-- Added self-contained `auto_test/eval_1.py` through `auto_test/eval_30.py` to validate the current action-based and answer-based tasks from `zhiling.md`.
+- Added self-contained `auto_test/eval_1.py` through `auto_test/eval_35.py` to validate the current action-based and answer-based tasks from `zhiling.md`.
+- Added persisted evaluator-facing UI preferences plus presenter-level logging coverage for tasks 31-35, including per-video playback settings, global quality changes, and multi-video like/save/comment flows.
