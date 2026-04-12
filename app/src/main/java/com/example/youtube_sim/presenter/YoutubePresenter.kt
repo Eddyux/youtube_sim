@@ -187,17 +187,22 @@ class YoutubePresenter(
     }
 
     override fun onSearchQueryChanged(query: String) {
-        uiState = uiState.copy(searchQuery = query)
+        uiState = uiState.copy(searchDraft = query)
         val normalized = query.trim()
         val details = if (normalized.isBlank()) emptyMap() else mapOf("query" to normalized)
         recordEvent("search_query_changed", normalized.ifBlank { "blank" }, details)
-        if (normalized.isNotBlank()) {
-            logEvaluatorMessage(
-                action = "search_query",
-                page = "search",
-                extraData = mapOf("query" to normalized.lowercase())
-            )
-        }
+    }
+
+    override fun onSearchSubmitted() {
+        val normalized = uiState.searchDraft.trim()
+        uiState = uiState.copy(searchQuery = normalized)
+        persistState()
+        if (normalized.isBlank()) return
+        logEvaluatorMessage(
+            action = "search_query",
+            page = "search",
+            extraData = mapOf("query" to normalized.lowercase())
+        )
     }
 
     override fun showPlaceholder(title: String, description: String) {

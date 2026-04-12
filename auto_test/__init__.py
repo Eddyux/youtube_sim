@@ -38,25 +38,25 @@ YOUTUBE_TASKS = AppTasks(
         TaskItem(
             instruction="查看我的观看历史",
             verify_func=validate_task_one,
-            human_steps=3,
+            human_steps=2,
             is_reasoning=False,
         ),
         TaskItem(
             instruction="搜索apple,给第一个视频点赞加收藏",
             verify_func=validate_task_two,
-            human_steps=6,
+            human_steps=7,
             is_reasoning=False,
         ),
         TaskItem(
             instruction="我想看itx装机视频，搜索itx并给第一个视频点赞",
             verify_func=validate_task_three,
-            human_steps=5,
+            human_steps=7,
             is_reasoning=False,
         ),
         TaskItem(
             instruction="查看我喜欢的视频，然后播放其中华语歌手的歌",
             verify_func=validate_task_four,
-            human_steps=5,
+            human_steps=4,
             is_reasoning=False,
         ),
         TaskItem(
@@ -74,13 +74,13 @@ YOUTUBE_TASKS = AppTasks(
         TaskItem(
             instruction="给Jay Chou点关注",
             verify_func=validate_task_seven,
-            human_steps=4,
+            human_steps=5,
             is_reasoning=False,
         ),
         TaskItem(
             instruction="给周杰伦的青花瓷评论“这首歌太动听了”",
             verify_func=validate_task_eight,
-            human_steps=6,
+            human_steps=8,
             is_reasoning=False,
         ),
         TaskItem(
@@ -96,7 +96,7 @@ YOUTUBE_TASKS = AppTasks(
             is_reasoning=True,
         ),
         TaskItem(
-            instruction="查看restricted model的状态是打开还是关闭",
+            instruction="查看restricted mode的状态是打开还是关闭",
             verify_func=validate_task_eleven,
             human_steps=3,
             is_reasoning=True,
@@ -128,7 +128,7 @@ YOUTUBE_TASKS = AppTasks(
         TaskItem(
             instruction="查看首页第一个视频播放页下方的相关视频有多少个",
             verify_func=validate_task_sixteen,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
         TaskItem(
@@ -152,37 +152,37 @@ YOUTUBE_TASKS = AppTasks(
         TaskItem(
             instruction="看一下周杰伦的粉丝数是多少",
             verify_func=validate_task_twenty,
-            human_steps=3,
+            human_steps=6,
             is_reasoning=True,
         ),
         TaskItem(
             instruction="刷一下短视频，刷到的前四个短视频有几个是关于电脑的？",
             verify_func=validate_task_twenty_one,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
         TaskItem(
             instruction="刷一下短视频，刷到的前四个短视频有几个是关于mini电脑的？",
             verify_func=validate_task_twenty_two,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
         TaskItem(
             instruction="刷一下短视频，刷到的前四个短视频关于电脑的有多少点赞？",
             verify_func=validate_task_twenty_three,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
         TaskItem(
             instruction="刷一下短视频，刷到的前四个短视频中，电脑相关的短视频时长一共多少秒，回答多少秒即可？",
             verify_func=validate_task_twenty_four,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
         TaskItem(
             instruction="周杰伦夜曲的MV中，最新的评论的点赞数是多少？",
             verify_func=validate_task_twenty_five,
-            human_steps=3,
+            human_steps=7,
             is_reasoning=True,
         ),
         TaskItem(
@@ -204,7 +204,7 @@ YOUTUBE_TASKS = AppTasks(
             is_reasoning=True,
         ),
         TaskItem(
-            instruction="首页all下面前八个视频中有几个是关于电脑的？",
+            instruction="首页all下面前六个视频中有几个是关于电脑的？",
             verify_func=validate_task_twenty_nine,
             human_steps=3,
             is_reasoning=True,
@@ -212,7 +212,7 @@ YOUTUBE_TASKS = AppTasks(
         TaskItem(
             instruction="当前app版本号多少？",
             verify_func=validate_task_thirty,
-            human_steps=3,
+            human_steps=4,
             is_reasoning=True,
         ),
     ],

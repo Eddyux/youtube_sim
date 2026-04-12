@@ -5,7 +5,7 @@ import subprocess
 
 PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
-TARGET_ITEM_ID = "all-macbook-neo"
+TARGET_ITEM_IDS = {"apple-macbook-neo", "all-macbook-neo"}
 
 
 def validate_task_two(result=None, device_id=None, backup_dir=None):
@@ -32,9 +32,9 @@ def validate_task_two(result=None, device_id=None, backup_dir=None):
         extra_data = event.get("extra_data", {})
         if event.get("action") == "search_query" and extra_data.get("query") == "apple":
             has_search = True
-        if event.get("action") == "toggle_video_like" and extra_data.get("item_id") == TARGET_ITEM_ID and extra_data.get("enabled") == "true":
+        if event.get("action") == "toggle_video_like" and extra_data.get("item_id") in TARGET_ITEM_IDS and extra_data.get("enabled") == "true":
             has_like = True
-        if event.get("action") == "toggle_video_save" and extra_data.get("item_id") == TARGET_ITEM_ID and extra_data.get("enabled") == "true":
+        if event.get("action") == "toggle_video_save" and extra_data.get("item_id") in TARGET_ITEM_IDS and extra_data.get("enabled") == "true":
             has_save = True
 
     return has_search and has_like and has_save

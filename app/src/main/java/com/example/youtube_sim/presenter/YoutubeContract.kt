@@ -71,6 +71,7 @@ data class YoutubeUiState(
     val comments: List<VideoComment> = emptyList(),
     val commentsByVideoId: Map<String, List<VideoComment>> = emptyMap(),
     val currentVideoResolutionLabel: String = "360p",
+    val searchDraft: String = "",
     val searchQuery: String = "",
     val subscribedChannels: Set<String> = emptySet(),
     val overlay: OverlayState? = null
@@ -90,6 +91,7 @@ interface YoutubePresenterContract {
     fun onYouEntrySelected(key: String)
     fun onSettingsItemSelected(label: String)
     fun onSearchQueryChanged(query: String)
+    fun onSearchSubmitted()
     fun showPlaceholder(title: String, description: String)
     fun onToggle(key: String)
     fun onSelectionChanged(groupKey: String, optionKey: String)

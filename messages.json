@@ -1,8 +1,42 @@
 [
   {
-    "action": "open_page",
-    "page": "history",
-    "extra_data": {},
-    "timestamp": 1775742334667
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "周杰伦的青花瓷"
+    },
+    "timestamp": 1775997946309
+  },
+  {
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "t"
+    },
+    "timestamp": 1775998004622
+  },
+  {
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "ta"
+    },
+    "timestamp": 1775998006675
+  },
+  {
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "ta"
+    },
+    "timestamp": 1775998143671
+  },
+  {
+    "action": "play_video",
+    "page": "search",
+    "extra_data": {
+      "item_id": "music-taylor-ophelia"
+    },
+    "timestamp": 1775998144540
   }
 ]

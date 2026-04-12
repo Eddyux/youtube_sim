@@ -152,9 +152,11 @@ fun YoutubeApp(
 
         OverlayState.Search -> {
             SearchScreen(
-                query = state.searchQuery,
-                results = state.homeTabs.filter { it.key != "live" }.flatMap { it.items },
+                draftQuery = state.searchDraft,
+                submittedQuery = state.searchQuery,
+                results = buildSearchResults(state.homeTabs),
                 onQueryChanged = presenter::onSearchQueryChanged,
+                onSearchSubmitted = presenter::onSearchSubmitted,
                 onFeedItemSelected = presenter::onFeedItemSelected,
                 onBack = presenter::dismissOverlay
             )

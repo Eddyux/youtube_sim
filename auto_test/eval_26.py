@@ -1,16 +1,18 @@
-def validate_task_twenty_six(result=None,device_id=None,backup_dir=None):
+def validate_task_twenty_six(result=None, device_id=None, backup_dir=None):
     if result is None:
         return False
     final_message = result.get("final_message")
     if not isinstance(final_message, str):
         return False
-    if 'final_message' in result and (
-            '9' in result['final_message'] or
-            '九' in result['final_message']
+    normalized_message = final_message.lower()
+    if "final_message" in result and (
+        "9" in final_message or
+        "九" in final_message or
+        "nine" in normalized_message
     ):
         return True
     else:
         return False
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(validate_task_twenty_six())

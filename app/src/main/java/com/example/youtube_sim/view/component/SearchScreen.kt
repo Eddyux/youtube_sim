@@ -37,23 +37,25 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.youtube_sim.model.FeedItem
+import com.example.youtube_sim.view.filterSearchResults
 
 @Composable
 fun SearchScreen(
-    query: String,
+    draftQuery: String,
+    submittedQuery: String,
     results: List<FeedItem>,
     onQueryChanged: (String) -> Unit,
+    onSearchSubmitted: () -> Unit,
     onFeedItemSelected: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    val normalizedQuery = query.trim()
-    val filtered = if (normalizedQuery.isBlank()) {
+    val normalizedDraft = draftQuery.trim()
+    val normalizedSubmitted = submittedQuery.trim()
+    val hasSubmittedSearch = normalizedSubmitted.isNotBlank() && normalizedDraft == normalizedSubmitted
+    val filtered = if (!hasSubmittedSearch) {
         emptyList()
     } else {
-        results.filter { item ->
-            item.title.contains(normalizedQuery, ignoreCase = true) ||
-                item.creator.contains(normalizedQuery, ignoreCase = true)
-        }
+        filterSearchResults(results, normalizedSubmitted)
     }
 
     LazyColumn(
@@ -64,11 +66,23 @@ fun SearchScreen(
             .padding(horizontal = 16.dp)
     ) {
         item {
-            SearchTopBar(query = query, onQueryChanged = onQueryChanged, onBack = onBack)
+            SearchTopBar(
+                query = draftQuery,
+                onQueryChanged = onQueryChanged,
+                onSearchSubmitted = onSearchSubmitted,
+                onBack = onBack
+            )
             Spacer(modifier = Modifier.height(18.dp))
-            if (normalizedQuery.isBlank()) {
+            if (normalizedDraft.isBlank()) {
                 Text(
                     text = "Enter a keyword to search creators, songs, or product videos.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF6B7280)
+                )
+                Spacer(modifier = Modifier.height(18.dp))
+            } else if (!hasSubmittedSearch) {
+                Text(
+                    text = "Tap the search button to show results.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFF6B7280)
                 )
@@ -83,9 +97,14 @@ fun SearchScreen(
             }
         }
 
-        if (filtered.isEmpty()) {
+        if (normalizedDraft.isBlank()) {
+            item { Spacer(modifier = Modifier.height(12.dp)) }
+        } else if (filtered.isEmpty()) {
             item {
-                EmptySearchState(query = normalizedQuery)
+                EmptySearchState(
+                    query = if (hasSubmittedSearch) normalizedSubmitted else normalizedDraft,
+                    showNoMatches = hasSubmittedSearch
+                )
             }
         } else {
             items(filtered, key = FeedItem::id) { item ->
@@ -102,6 +121,7 @@ fun SearchScreen(
 private fun SearchTopBar(
     query: String,
     onQueryChanged: (String) -> Unit,
+    onSearchSubmitted: () -> Unit,
     onBack: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -125,14 +145,21 @@ private fun SearchTopBar(
             singleLine = true,
             shape = RoundedCornerShape(18.dp),
             trailingIcon = {
-                Icon(
-                    imageVector = SearchIcon,
-                    contentDescription = "Search",
-                    tint = Color(0xFF6B7280)
-                )
+                Surface(
+                    modifier = Modifier.clickable(onClick = onSearchSubmitted),
+                    shape = CircleShape,
+                    color = Color.Transparent
+                ) {
+                    Icon(
+                        imageVector = SearchIcon,
+                        contentDescription = "Search",
+                        tint = Color(0xFF6B7280),
+                        modifier = Modifier.padding(6.dp)
+                    )
+                }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {}),
+            keyboardActions = KeyboardActions(onSearch = { onSearchSubmitted() }),
             colors = androidx.compose.material3.TextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
@@ -193,7 +220,10 @@ private fun SearchResultRow(
 }
 
 @Composable
-private fun EmptySearchState(query: String) {
+private fun EmptySearchState(
+    query: String,
+    showNoMatches: Boolean
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -210,10 +240,19 @@ private fun EmptySearchState(query: String) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "No matches for \"$query\"", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            val title = if (showNoMatches) {
+                "No matches for \"$query\""
+            } else {
+                "Ready to search \"$query\""
+            }
+            Text(text = title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Try another title or creator name from the local library.",
+                text = if (showNoMatches) {
+                    "Try another title or creator name from the local library."
+                } else {
+                    "Press search to run the query against the local library."
+                },
                 color = Color(0xFF6B7280),
                 style = MaterialTheme.typography.bodyMedium
             )
