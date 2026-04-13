@@ -76,17 +76,26 @@ fun LibraryTopBar(
 }
 
 @Composable
-fun FilterChips(labels: List<String>) {
+fun FilterChips(
+    labels: List<String>,
+    selectedLabel: String = labels.firstOrNull().orEmpty(),
+    onSelected: (String) -> Unit = {}
+) {
     Row(
         modifier = Modifier.horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        labels.forEachIndexed { index, label ->
-            Surface(shape = RoundedCornerShape(12.dp), color = if (index == 0) Color.Black else Color(0xFFF4F4F5)) {
+        labels.forEach { label ->
+            val selected = label == selectedLabel
+            Surface(
+                modifier = Modifier.clickable { onSelected(label) },
+                shape = RoundedCornerShape(12.dp),
+                color = if (selected) Color.Black else Color(0xFFF4F4F5)
+            ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
                     text = label,
-                    color = if (index == 0) Color.White else Color.Black
+                    color = if (selected) Color.White else Color.Black
                 )
             }
         }

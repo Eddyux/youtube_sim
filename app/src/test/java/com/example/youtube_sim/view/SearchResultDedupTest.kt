@@ -114,6 +114,28 @@ class SearchResultDedupTest {
         assertEquals(listOf("music-jay-chou-nocturne"), nocturneIds)
     }
 
+    @Test
+    fun filterSearchResults_doesNotMatchSingleLetterTokensInsideLongerQueries() {
+        val results = listOf(
+            feedItem(
+                id = "music-jay-chou-i-do",
+                assetPath = "data/video/i-do.mp4",
+                title = "Jay Chou I Do",
+                creator = "Jay Chou"
+            ),
+            feedItem(
+                id = "apple-esim-travel",
+                assetPath = "data/video/iphone.mp4",
+                title = "How to use eSIM while traveling with your iPhone",
+                creator = "Apple Support"
+            )
+        )
+
+        val resultIds = filterSearchResults(results, "iphone").map(FeedItem::id)
+
+        assertEquals(listOf("apple-esim-travel"), resultIds)
+    }
+
     private fun feedItem(
         id: String,
         assetPath: String,

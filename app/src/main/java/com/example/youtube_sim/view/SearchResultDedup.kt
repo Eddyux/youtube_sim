@@ -78,7 +78,7 @@ private fun itemMatchesQuery(item: FeedItem, queryKeywords: List<String>): Boole
 
     return queryKeywords.all { queryKeyword ->
         itemKeywords.any { keyword ->
-            keyword.contains(queryKeyword) || queryKeyword.contains(keyword)
+            keyword.contains(queryKeyword)
         } || joinedKeywords.contains(queryKeyword)
     }
 }

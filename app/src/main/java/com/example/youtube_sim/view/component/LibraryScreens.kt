@@ -17,20 +17,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,6 +44,10 @@ import com.example.youtube_sim.model.HistorySection
 import com.example.youtube_sim.model.OverflowMenuAction
 import com.example.youtube_sim.model.PlaylistDetail
 import com.example.youtube_sim.model.RootTab
+import com.example.youtube_sim.view.HistoryFilter
+import com.example.youtube_sim.view.filterHistorySections
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 
 @Composable
 fun HistoryScreen(
@@ -52,6 +61,19 @@ fun HistoryScreen(
     onSearchRequested: () -> Unit
 ) {
     var menuItemId by remember { mutableStateOf<String?>(null) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
+    val filteredSections = remember(sections, itemsById, searchQuery, selectedFilter) {
+        filterHistorySections(
+            sections = sections,
+            itemsById = itemsById,
+            query = searchQuery,
+            filter = selectedFilter
+        )
+    }
+    val visibleItemCount = remember(filteredSections) {
+        filteredSections.sumOf { it.entries.size }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LibraryScaffold(onBottomTabSelected = onBottomTabSelected) { padding ->
@@ -69,32 +91,52 @@ fun HistoryScreen(
                         onMoreRequested = {}
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
-                        color = Color(0xFFF4F4F5)
-                    ) {
-                        Text(modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp), text = "Search watch history", color = Color(0xFF6B7280))
-                    }
+                    HistorySearchBar(
+                        query = searchQuery,
+                        onQueryChanged = { searchQuery = it }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    FilterChips(labels = listOf("All", "Videos", "Shorts", "Music"))
+                    FilterChips(
+                        labels = HistoryFilter.entries.map { it.label },
+                        selectedLabel = selectedFilter.label,
+                        onSelected = { label ->
+                            selectedFilter = HistoryFilter.entries.firstOrNull { it.label == label } ?: HistoryFilter.ALL
+                        }
+                    )
                     Spacer(modifier = Modifier.height(10.dp))
-                }
-
-                sections.forEach { section ->
-                    item {
-                        Text(text = section.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    if (searchQuery.isNotBlank()) {
+                        Text(
+                            text = "$visibleItemCount result(s)",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color(0xFF6B7280)
+                        )
                         Spacer(modifier = Modifier.height(10.dp))
                     }
-                    items(section.entries, key = { "${section.title}-${it.itemId}" }) { entry ->
-                        val item = itemsById[entry.itemId] ?: return@items
-                        LibraryVideoRow(
-                            item = item,
-                            note = entry.note,
-                            onClick = { onFeedItemSelected(item.id) },
-                            onMoreClick = { menuItemId = item.id }
+                }
+
+                if (filteredSections.isEmpty()) {
+                    item {
+                        EmptyHistoryState(
+                            query = searchQuery,
+                            filter = selectedFilter
                         )
-                        Spacer(modifier = Modifier.height(14.dp))
+                    }
+                } else {
+                    filteredSections.forEach { section ->
+                        item {
+                            Text(text = section.title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                        items(section.entries, key = { "${section.title}-${it.itemId}" }) { entry ->
+                            val item = itemsById[entry.itemId] ?: return@items
+                            LibraryVideoRow(
+                                item = item,
+                                note = entry.note,
+                                onClick = { onFeedItemSelected(item.id) },
+                                onMoreClick = { menuItemId = item.id }
+                            )
+                            Spacer(modifier = Modifier.height(14.dp))
+                        }
                     }
                 }
             }
@@ -109,6 +151,84 @@ fun HistoryScreen(
                     menuItemId = null
                 },
                 onDismiss = { menuItemId = null }
+            )
+        }
+    }
+}
+
+@Composable
+private fun HistorySearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChanged,
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = { Text(text = "Search watch history") },
+        singleLine = true,
+        shape = RoundedCornerShape(14.dp),
+        leadingIcon = {
+            Icon(
+                imageVector = SearchIcon,
+                contentDescription = "Search",
+                tint = Color(0xFF6B7280)
+            )
+        },
+        trailingIcon = {
+            if (query.isNotBlank()) {
+                Icon(
+                    imageVector = Icons.Rounded.Close,
+                    contentDescription = "Clear",
+                    tint = Color(0xFF6B7280),
+                    modifier = Modifier.clickable { onQueryChanged("") }
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = {}),
+        colors = androidx.compose.material3.TextFieldDefaults.colors(
+            focusedContainerColor = Color(0xFFF4F4F5),
+            unfocusedContainerColor = Color(0xFFF4F4F5),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+
+@Composable
+private fun EmptyHistoryState(
+    query: String,
+    filter: HistoryFilter
+) {
+    val message = when {
+        query.isNotBlank() -> "No history matches \"$query\""
+        filter != HistoryFilter.ALL -> "No ${filter.label.lowercase()} history yet"
+        else -> "No watch history yet"
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 56.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(shape = RoundedCornerShape(18.dp), color = Color(0xFFF4F4F5)) {
+                Icon(
+                    imageVector = SearchIcon,
+                    contentDescription = null,
+                    modifier = Modifier.padding(16.dp).size(28.dp),
+                    tint = Color(0xFF9CA3AF)
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = message, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Try another keyword or switch the history filter.",
+                color = Color(0xFF6B7280),
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
