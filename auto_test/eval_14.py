@@ -9,6 +9,9 @@ def validate_task_fourteen(result=None, device_id=None, backup_dir=None):
         "2个" in final_message or
         "两个" in final_message or
         "二个" in final_message or
+        "2条" in final_message or
+        "两条" in final_message or
+        "二条" in final_message or
         "two" in normalized_message
     ):
         return True

@@ -211,7 +211,7 @@ fun YoutubeApp(
 
         is OverlayState.VideoPlay -> {
             val standardRelatedItems = state.homeTabs
-                .filter { it.key != "shorts" }
+                .filter { it.key != "shorts" && it.key != "live" }
                 .flatMap { it.items }
                 .filter { it.id != overlay.item.id }
             val shortBonus = shortsItems.firstOrNull()
