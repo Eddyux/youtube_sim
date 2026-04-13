@@ -46,6 +46,7 @@ import com.example.youtube_sim.model.PlaylistDetail
 import com.example.youtube_sim.model.RootTab
 import com.example.youtube_sim.view.HistoryFilter
 import com.example.youtube_sim.view.filterHistorySections
+import com.example.youtube_sim.view.resolveHistorySearchState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 
@@ -61,13 +62,20 @@ fun HistoryScreen(
     onSearchRequested: () -> Unit
 ) {
     var menuItemId by remember { mutableStateOf<String?>(null) }
-    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var searchDraft by rememberSaveable { mutableStateOf("") }
+    var submittedSearchQuery by rememberSaveable { mutableStateOf("") }
     var selectedFilter by rememberSaveable { mutableStateOf(HistoryFilter.ALL) }
-    val filteredSections = remember(sections, itemsById, searchQuery, selectedFilter) {
+    val searchState = remember(searchDraft, submittedSearchQuery) {
+        resolveHistorySearchState(
+            draftQuery = searchDraft,
+            submittedQuery = submittedSearchQuery
+        )
+    }
+    val filteredSections = remember(sections, itemsById, searchState.appliedQuery, selectedFilter) {
         filterHistorySections(
             sections = sections,
             itemsById = itemsById,
-            query = searchQuery,
+            query = searchState.appliedQuery,
             filter = selectedFilter
         )
     }
@@ -92,8 +100,15 @@ fun HistoryScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     HistorySearchBar(
-                        query = searchQuery,
-                        onQueryChanged = { searchQuery = it }
+                        query = searchDraft,
+                        onQueryChanged = { searchDraft = it },
+                        onSearchSubmitted = {
+                            submittedSearchQuery = searchDraft.trim()
+                        },
+                        onClear = {
+                            searchDraft = ""
+                            submittedSearchQuery = ""
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     FilterChips(
@@ -104,7 +119,14 @@ fun HistoryScreen(
                         }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    if (searchQuery.isNotBlank()) {
+                    if (searchState.hasPendingSearch) {
+                        Text(
+                            text = "Tap the search button to show results.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFF6B7280)
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                    } else if (searchState.hasSubmittedSearch) {
                         Text(
                             text = "$visibleItemCount result(s)",
                             style = MaterialTheme.typography.labelLarge,
@@ -117,7 +139,7 @@ fun HistoryScreen(
                 if (filteredSections.isEmpty()) {
                     item {
                         EmptyHistoryState(
-                            query = searchQuery,
+                            query = searchState.appliedQuery,
                             filter = selectedFilter
                         )
                     }
@@ -159,7 +181,9 @@ fun HistoryScreen(
 @Composable
 private fun HistorySearchBar(
     query: String,
-    onQueryChanged: (String) -> Unit
+    onQueryChanged: (String) -> Unit,
+    onSearchSubmitted: () -> Unit,
+    onClear: () -> Unit
 ) {
     OutlinedTextField(
         value = query,
@@ -176,17 +200,26 @@ private fun HistorySearchBar(
             )
         },
         trailingIcon = {
-            if (query.isNotBlank()) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (query.isNotBlank()) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Clear",
+                        tint = Color(0xFF6B7280),
+                        modifier = Modifier.clickable(onClick = onClear)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
                 Icon(
-                    imageVector = Icons.Rounded.Close,
-                    contentDescription = "Clear",
+                    imageVector = SearchIcon,
+                    contentDescription = "Search",
                     tint = Color(0xFF6B7280),
-                    modifier = Modifier.clickable { onQueryChanged("") }
+                    modifier = Modifier.clickable(onClick = onSearchSubmitted)
                 )
             }
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {}),
+        keyboardActions = KeyboardActions(onSearch = { onSearchSubmitted() }),
         colors = androidx.compose.material3.TextFieldDefaults.colors(
             focusedContainerColor = Color(0xFFF4F4F5),
             unfocusedContainerColor = Color(0xFFF4F4F5),
