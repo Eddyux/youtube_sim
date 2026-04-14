@@ -63,6 +63,8 @@ private fun searchTermsForItem(item: FeedItem): List<String> {
         if ("jay-chou" in item.id || item.creator.contains("Jay Chou", ignoreCase = true)) {
             add("Jay Chou")
             add("JayChou")
+            add("Jay Chou's")
+            add("JayChou's")
             add("周杰伦")
             add("周杰伦的歌")
         }
@@ -107,6 +109,14 @@ private fun extractSearchKeywords(value: String): List<String> {
 
 private fun normalizeSearchText(value: String): String {
     return value.lowercase()
+        .replace("jay chou's", "jaychou ")
+        .replace("jaychou's", "jaychou ")
+        .replace("jay chou’s", "jaychou ")
+        .replace("jaychou’s", "jaychou ")
+        .replace("'s", " ")
+        .replace("’s", " ")
+        .replace("'", "")
+        .replace("’", "")
         .replace("周杰倫", "周杰伦")
         .replace("jay chou", "jaychou")
 }

@@ -5,7 +5,7 @@ PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
 STATE_FILE_PATH = "files/task_state.json"
 TARGET_ITEM_IDS = {"all-taylor-ophelia", "music-taylor-ophelia"}
-TARGET_TEXT = "虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"
+TARGET_TEXT = "Although your song sounds great, I still prefer listening to Jay Chou"
 
 
 def validate_task_thirty_five(result=None, device_id=None, backup_dir=None):

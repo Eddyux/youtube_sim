@@ -7,7 +7,7 @@ PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
 STATE_FILE_PATH = "files/task_state.json"
 TARGET_ITEM_ID = "music-blue-porcelain"
-TARGET_TEXT = "这个MV真清晰"
+TARGET_TEXT = "This MV looks really clear"
 QUALITY_PAGES = {"quality", "quality_settings"}
 QUALITY_GROUP_KEYS = {"quality_mobile", "quality_wifi"}
 

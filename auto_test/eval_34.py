@@ -5,8 +5,8 @@ PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
 STATE_FILE_PATH = "files/task_state.json"
 TARGETS = {
-    "music-jay-chou-nocturne": "我是周杰伦十年老粉",
-    "music-blue-porcelain": "这首歌让我想起了那个女孩",
+    "music-jay-chou-nocturne": "I have been a Jay Chou fan for ten years",
+    "music-blue-porcelain": "This song reminds me of that girl",
 }
 
 

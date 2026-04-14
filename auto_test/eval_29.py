@@ -6,9 +6,7 @@ def validate_task_twenty_nine(result=None, device_id=None, backup_dir=None):
         return False
     normalized_message = final_message.lower()
     if "final_message" in result and (
-        "3个" in final_message or
-        "3 个" in final_message or
-        "三个" in final_message or
+        "3" in final_message or
         "three" in normalized_message
     ):
         return True

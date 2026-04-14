@@ -9,7 +9,6 @@ def validate_task_twenty_three(result=None, device_id=None, backup_dir=None):
         "3.6K" in final_message or
         "3.6k" in final_message or
         "3600" in final_message or
-        "三千六" in final_message or
         "three thousand six hundred" in normalized_message
     ):
         return True

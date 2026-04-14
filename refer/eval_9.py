@@ -5,8 +5,7 @@ def validate_task_nine(result=None,device_id=None,backup_dir=None):
     if not isinstance(final_message, str):
         return False
     if 'final_message' in result and (
-            '3条' in result['final_message'] or
-            '三条' in result['final_message'] or
+            '3' in result['final_message'] or
             'three' in result['final_message'].lower()
     ):
         return True

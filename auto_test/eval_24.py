@@ -7,7 +7,6 @@ def validate_task_twenty_four(result=None, device_id=None, backup_dir=None):
     normalized_message = final_message.lower()
     if "final_message" in result and (
         "139" in final_message or
-        "一百三十九" in final_message or
         "one hundred and thirty nine" in normalized_message or
         "one hundred and thirty-nine" in normalized_message or
         "one hundred thirty nine" in normalized_message or

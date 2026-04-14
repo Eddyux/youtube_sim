@@ -7,7 +7,6 @@ def validate_task_sixteen(result=None, device_id=None, backup_dir=None):
     normalized_message = final_message.lower()
     if "final_message" in result and (
         "14" in final_message or
-        "十四" in final_message or
         "fourteen" in normalized_message
     ):
         return True

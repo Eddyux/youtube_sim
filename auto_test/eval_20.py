@@ -7,7 +7,6 @@ def validate_task_twenty(result=None, device_id=None, backup_dir=None):
     normalized_message = final_message.lower()
     if "final_message" in result and (
         "3.36M" in final_message or
-        "三百三十六万" in final_message or
         "3.36 million" in normalized_message or
         "three point three six million" in normalized_message
     ):

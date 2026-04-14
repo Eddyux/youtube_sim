@@ -1,72 +1,68 @@
 [
   {
-    "action": "play_video",
-    "page": "home",
+    "action": "search_query",
+    "page": "search",
     "extra_data": {
-      "item_id": "music-jay-chou-nocturne"
+      "query": "jay chou的夜曲"
     },
-    "timestamp": 1776004462358
+    "timestamp": 1776168141160
+  },
+  {
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "iphone"
+    },
+    "timestamp": 1776168150839
+  },
+  {
+    "action": "search_query",
+    "page": "search",
+    "extra_data": {
+      "query": "iphone"
+    },
+    "timestamp": 1776168158048
+  },
+  {
+    "action": "open_page",
+    "page": "playlist:liked_videos",
+    "extra_data": {},
+    "timestamp": 1776168397685
   },
   {
     "action": "play_video",
-    "page": "home",
+    "page": "playlist:liked_videos",
+    "extra_data": {
+      "item_id": "shorts-unboxing-mac-desktop"
+    },
+    "timestamp": 1776168399058
+  },
+  {
+    "action": "open_page",
+    "page": "playlist:liked_videos",
+    "extra_data": {},
+    "timestamp": 1776168403164
+  },
+  {
+    "action": "play_video",
+    "page": "playlist:liked_videos",
     "extra_data": {
       "item_id": "music-taylor-ophelia"
     },
-    "timestamp": 1776004469638
+    "timestamp": 1776168404089
   },
   {
-    "action": "submit_comment",
-    "page": "comments_sheet",
-    "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "text": "虽然你的歌很好听，但是我还是喜欢听周杰伦的歌"
-    },
-    "timestamp": 1776004477300
+    "action": "open_page",
+    "page": "playlist:liked_videos",
+    "extra_data": {},
+    "timestamp": 1776168410954
   },
   {
-    "action": "toggle_video_save",
-    "page": "video_play:music-taylor-ophelia",
+    "action": "play_video",
+    "page": "playlist:liked_videos",
     "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "enabled": "true"
+      "item_id": "music-jay-chou-i-do"
     },
-    "timestamp": 1776004485095
-  },
-  {
-    "action": "toggle_video_save",
-    "page": "video_play:music-taylor-ophelia",
-    "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "enabled": "false"
-    },
-    "timestamp": 1776004513945
-  },
-  {
-    "action": "toggle_video_save",
-    "page": "video_play:music-taylor-ophelia",
-    "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "enabled": "true"
-    },
-    "timestamp": 1776004514259
-  },
-  {
-    "action": "toggle_video_like",
-    "page": "video_play:music-taylor-ophelia",
-    "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "enabled": "false"
-    },
-    "timestamp": 1776004514961
-  },
-  {
-    "action": "toggle_video_like",
-    "page": "video_play:music-taylor-ophelia",
-    "extra_data": {
-      "item_id": "music-taylor-ophelia",
-      "enabled": "true"
-    },
-    "timestamp": 1776004515431
+    "timestamp": 1776168412663
   }
 ]

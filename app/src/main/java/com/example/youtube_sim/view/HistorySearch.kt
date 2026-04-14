@@ -75,5 +75,15 @@ private fun extractHistoryKeywords(query: String): List<String> {
 }
 
 private fun normalizeHistorySearchText(value: String): String {
-    return value.lowercase().trim()
+    return value.lowercase()
+        .replace("jay chou's", "jaychou ")
+        .replace("jaychou's", "jaychou ")
+        .replace("jay chou’s", "jaychou ")
+        .replace("jaychou’s", "jaychou ")
+        .replace("'s", " ")
+        .replace("’s", " ")
+        .replace("'", "")
+        .replace("’", "")
+        .replace("jay chou", "jaychou")
+        .trim()
 }

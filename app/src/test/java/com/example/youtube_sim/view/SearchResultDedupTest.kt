@@ -115,6 +115,30 @@ class SearchResultDedupTest {
     }
 
     @Test
+    fun filterSearchResults_matchesPossessiveJayChouSongQueries() {
+        val results = listOf(
+            feedItem(
+                id = "music-blue-porcelain",
+                assetPath = "data/video/blue-porcelain.mp4",
+                title = "Jay Chou 青花瓷",
+                creator = "Jay Chou"
+            ),
+            feedItem(
+                id = "music-jay-chou-nocturne",
+                assetPath = "data/video/nocturne.mp4",
+                title = "Jay Chou 夜曲",
+                creator = "Jay Chou"
+            )
+        )
+
+        val bluePorcelainIds = filterSearchResults(results, "JayChou's青花瓷").map(FeedItem::id)
+        val nocturneIds = filterSearchResults(results, "Jay Chou's 夜曲").map(FeedItem::id)
+
+        assertEquals(listOf("music-blue-porcelain"), bluePorcelainIds)
+        assertEquals(listOf("music-jay-chou-nocturne"), nocturneIds)
+    }
+
+    @Test
     fun filterSearchResults_doesNotMatchSingleLetterTokensInsideLongerQueries() {
         val results = listOf(
             feedItem(

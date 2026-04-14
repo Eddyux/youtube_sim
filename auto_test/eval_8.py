@@ -2,7 +2,7 @@ from appsim.utils import read_json_from_device
 
 PACKAGE_NAME = "com.example.youtube_sim"
 DEVICE_FILE_PATH = "files/messages.json"
-TARGET_TEXT = "这首歌太动听了"
+TARGET_TEXT = "This song is so beautiful"
 TARGET_ITEM_ID = "music-blue-porcelain"
 
 

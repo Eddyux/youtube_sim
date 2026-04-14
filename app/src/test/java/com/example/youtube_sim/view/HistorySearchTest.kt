@@ -132,6 +132,47 @@ class HistorySearchTest {
         )
     }
 
+    @Test
+    fun filterHistorySections_matchesPossessiveJayChouSongQueries() {
+        val sections = listOf(
+            HistorySection(
+                title = "Today",
+                entries = listOf(
+                    HistoryEntry("music-blue-porcelain"),
+                    HistoryEntry("music-jay-chou-nocturne")
+                )
+            )
+        )
+        val itemsById = mapOf(
+            "music-blue-porcelain" to feedItem(
+                id = "music-blue-porcelain",
+                title = "Jay Chou 青花瓷",
+                creator = "Jay Chou"
+            ),
+            "music-jay-chou-nocturne" to feedItem(
+                id = "music-jay-chou-nocturne",
+                title = "Jay Chou 夜曲",
+                creator = "Jay Chou"
+            )
+        )
+
+        val bluePorcelainResult = filterHistorySections(
+            sections = sections,
+            itemsById = itemsById,
+            query = "JayChou's青花瓷",
+            filter = HistoryFilter.ALL
+        )
+        val nocturneResult = filterHistorySections(
+            sections = sections,
+            itemsById = itemsById,
+            query = "Jay Chou's 夜曲",
+            filter = HistoryFilter.ALL
+        )
+
+        assertEquals(listOf("music-blue-porcelain"), bluePorcelainResult.flatMap { it.entries.map(HistoryEntry::itemId) })
+        assertEquals(listOf("music-jay-chou-nocturne"), nocturneResult.flatMap { it.entries.map(HistoryEntry::itemId) })
+    }
+
     private fun feedItem(
         id: String,
         title: String = "How Apple Designed MacBook Neo",

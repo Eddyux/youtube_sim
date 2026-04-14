@@ -7,7 +7,6 @@ def validate_task_eighteen(result=None, device_id=None, backup_dir=None):
     normalized_message = final_message.lower()
     if "final_message" in result and (
         "17:35" in final_message or
-        "十七分三十五秒" in final_message or
         "seventeen minutes thirty five seconds" in normalized_message or
         "seventeen minutes thirty-five seconds" in normalized_message
     ):
