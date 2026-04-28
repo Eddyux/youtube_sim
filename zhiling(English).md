@@ -3,7 +3,7 @@ No.	Instruction	Verification Method	Is Reasoning Task	Step Count
 2	Search for apple, then like and save the first video	Check whether apple was searched and whether the first video was liked and saved		7
 3	I want to watch an ITX PC build video. Search for itx and like the first video	Check whether itx was searched and whether the first video was liked		7
 4	View my liked videos, then play the song by the Chinese-language singer	Check whether Jay Chou's "I Do" was played		4
-5	Turn on the subscriptions button	Check whether the Subscriptions toggle was turned on in Settings > Notifications		4
+5	Turn on the notification subscription button	Check whether the Subscriptions toggle was turned on in Settings > Notifications		4
 6	Delete the last video in Watch later	Check whether "Screenshot to Code...." was removed from Watch later		4
 7	Subscribe to Jay Chou	Check whether Jay Chou was subscribed to		5
 8	Comment "This song is so beautiful" on Jay Chou 青花瓷	Check whether the comment "This song is so beautiful" was posted under Jay Chou 青花瓷 MV		8
